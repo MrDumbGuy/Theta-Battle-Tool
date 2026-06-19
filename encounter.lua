@@ -113,19 +113,6 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         [3] = {"* "..enemies[3].name, 218, 851},
     }
 
-    local items = {}
-
-    items[1] = Item("FriedEgg", 100)
-    items[2] = Item("Jalapeno", 120)
-
-    local ItemsSubArray = {
-        [1] = {"* "..items[1].name, 218, 771},
-        [2] = {"* "..items[2].name, 778, 771}
-    }
-    local ItemsSub = Submenu(ItemsSubArray, {"ITEMUI"}, nil, false)
-
-    ItemMan = ItemHandler(items, ItemsSubArray, ItemsSub)
-
     self.act_sub_subs = { --ACT -> enemies[i] (in your original array) -> These show up
         [enemies[1]] = { --Handle these in enemies[1]:act(actname)
             [1] = {"* Alarm", 218, 771, function () return "* Mizzr is awoken!\n* This sounds like a bad idea." end},

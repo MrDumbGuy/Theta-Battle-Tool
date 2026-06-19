@@ -11,8 +11,6 @@ require "battlebox"
 require "animate"
 require "bullet"
 require "encounter"
-require "item"
-require "itemhandler"
 flux = require "flux"
 tick = require "tick"
 json = require "json"
@@ -419,7 +417,6 @@ function love.keypressed(key)
         elseif key == "z" then
             --TODO: ADD SUPPORT FOR CUSTOM NEXT STATE. FOR NOW, THIS ONLY WORKS FOR ITEMS
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:menuState(Sole, 631, 471, "ITEMUI", ItemMan.itemsSubArray, battle)
         elseif key == "left" then
             Sole:updatePos(-1)
         elseif key == "right" then
@@ -530,7 +527,6 @@ function love.draw()
 
     battle.Enemysub:draw(battle.current_state)
     battle.PartyMemberSub:draw(battle.current_state)
-    ItemMan.itemsSub:draw(battle.current_state)
 
     for i = 1, #battle.Enemysubsubs do
         battle.Enemysubsubs[i]:draw(battle.current_state)
