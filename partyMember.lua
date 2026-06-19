@@ -142,17 +142,6 @@ function PartyMember:act(local_enemy, actname, ui)
     local_enemy:act(actname, ui) --Lets local_enemy handle the act
 end
 
-function PartyMember:useItem(item)
-    self.hp = self.hp + item.hp
-    self.hpUP = item.hp
-    if self.hp > self.maxhp then
-        self.hp = self.maxhp
-        self.hpUP = "MAX"
-    end
-    --PLAY HEAL SOUND
-    --SHOW HP INCREASE (like the mercyup)
-end
-
 function PartyMember:spare(local_enemy)
     local_enemy:spared()
 end
