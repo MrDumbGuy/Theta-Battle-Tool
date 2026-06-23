@@ -423,16 +423,6 @@ function love.keypressed(key)
             Sole:updatePos(1)
         end
 
-    elseif battle.current_state == "ITEMUI" then
-        if key == "x" then
-            UIs[current_party_member]:menuState(Sole, 0, 0, "MEMBERUI", battle.PartyMemberSubArray, battle)
-            love.audio.play(SND_SELECT)
-        elseif key == "left" then
-            Sole:updatePos(-1)
-        elseif key == "right" then
-            Sole:updatePos(1)
-        end
-
     elseif battle.current_state == "SPAREUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)
