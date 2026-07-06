@@ -507,7 +507,7 @@ function love.draw()
     end
 
     for i = 1, #UIs do
-        UIs[i]:draw(battle.current_state)
+        UIs[i]:draw(battle.current_state, battle.party_members)
     end
     for i = 1,#enemies do
         if enemies[i] then

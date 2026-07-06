@@ -52,10 +52,10 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         krisjson:close()
     end
 
-    local kris_1 = PartyMember("Kris1", 100, 202, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 203, 35, 10)
+    local kris_1 = PartyMember("Kris1", 100, 202, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
     kris_1:set_animation("ATTACK")
 
-    local kris_2 = PartyMember("Kris2", 100, 402, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 203, 35, 10)
+    local kris_2 = PartyMember("Kris2", 100, 402, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
     kris_2:set_animation("ATTACK")
 
     self.party_members = {
@@ -145,6 +145,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     --Load fonts!
     Battlefont = love.graphics.newFont("fonts/8bitOperatorPlus-Bold.ttf", 30)
     Goldenfont = love.graphics.newImageFont("sprites/goldennumeralfont.png", "0123456789+-%/ ")--The mercy increased font
+    HPfont = love.graphics.newFont("fonts/deltarune-hp-font.otf", 14)
 
     love.graphics.setFont(Battlefont)
 

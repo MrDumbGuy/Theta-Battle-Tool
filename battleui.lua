@@ -47,12 +47,18 @@ function BattleUi:subtext(subtext)
     self.subtextstr = subtext
 end
 
-function BattleUi:draw(localcurrentstate)
+function BattleUi:draw(localcurrentstate, members)
     if localcurrentstate == "BATTLEUI" and current_party_member == self.targetpartymember then
         love.graphics.draw(self.background, self.x, self.y, 0, 1.5, 1.5)
         love.graphics.draw(self.buttonimages[self.buttonmode], self.x, self.y, 0, 1.5, 1.5)
+        love.graphics.setFont(HPfont)
+        love.graphics.print(members[self.targetpartymember].hp, self.x+205, self.y+10, 0, 1, 1)
+        love.graphics.print(members[self.targetpartymember].maxhp, self.x+265, self.y+10, 0, 1, 1)
     else
         love.graphics.draw(self.header, self.x, self.y+54, 0, 1.5, 1.5)
+        love.graphics.setFont(HPfont)
+        love.graphics.print(members[self.targetpartymember].hp, self.x+205, self.y+10, 0, 1, 1)
+        love.graphics.print(members[self.targetpartymember].maxhp, self.x+265, self.y+10, 0, 1, 1)
     end
     if self.subtextstr and current_party_member == self.targetpartymember then
         love.graphics.setColor(1,1,1,1)
