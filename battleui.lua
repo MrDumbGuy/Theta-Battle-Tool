@@ -57,8 +57,8 @@ function BattleUi:draw(localcurrentstate, members)
     else
         love.graphics.draw(self.header, self.x, self.y+54, 0, 1.5, 1.5)
         love.graphics.setFont(HPfont)
-        love.graphics.print(members[self.targetpartymember].hp, self.x+205, self.y+10, 0, 1, 1)
-        love.graphics.print(members[self.targetpartymember].maxhp, self.x+265, self.y+10, 0, 1, 1)
+        love.graphics.print(members[self.targetpartymember].hp, self.x+205, self.y+64, 0, 1, 1)
+        love.graphics.print(members[self.targetpartymember].maxhp, self.x+265, self.y+64, 0, 1, 1)
     end
     if self.subtextstr and current_party_member == self.targetpartymember then
         love.graphics.setColor(1,1,1,1)
