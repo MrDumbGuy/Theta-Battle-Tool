@@ -1,8 +1,8 @@
 BattleBar = Object:extend()
 
-function BattleBar:new(rectanlex, y, i,party_members)
+function BattleBar:new(rectanglex, y, i,party_members)
     -- self.x = 0
-    self.rectanlex = rectanlex
+    self.rectanglex = rectanglex
     self.y = y
     self.target_member_no = i
 
@@ -13,9 +13,9 @@ end
 
 function BattleBar:attack()
 
-    local mult = math.floor(math.abs(self.rectanlex - (900+100*self.target_member_no) )/100) --multiplier used in ATK calculation
+    local mult = math.floor(math.abs(self.rectanglex - (900+100*self.target_member_no) )/100) --multiplier used in ATK calculation
 
-    if self.rectanlex < -50 then mult = 0 end
+    if self.rectanglex < -50 then mult = 0 end
 
     if not self.used then
         self.used = true
@@ -27,13 +27,13 @@ end
 function BattleBar:draw()
     if not self.used then
         love.graphics.draw(self.target_image, 0, self.y, 0, 1.5, 1.5)
-        love.graphics.draw(self.attackrectangle, self.rectanlex, self.y, 0, 1.5, 1.5)
+        love.graphics.draw(self.attackrectangle, self.rectanglex, self.y, 0, 1.5, 1.5)
     end
 end
 
 function BattleBar:update(dt)
-    self.rectanlex = self.rectanlex - 750*dt
-    if self.rectanlex < -50 then
+    self.rectanglex = self.rectanglex - 750*dt
+    if self.rectanglex < -50 then
         self:attack()
     end
 end

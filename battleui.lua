@@ -1,20 +1,27 @@
 BattleUi = Object:extend()
 
-function BattleUi:new(name, background, header, buttons, x, y, targetpartymember)
+function BattleUi:new(name, background, header, buttons, x, y, targetpartymember, sheetimage, sheetdata)
     self.name = name
-    self.background = love.graphics.newImage("sprites/battleUI/ui_"..background..".png")
-    self.header = love.graphics.newImage("sprites/battleUI/header_"..header..".png")
+    self.sheetimage = sheetimage
+    self.sheetwidth = sheetdata.meta.size.w
+    self.sheetheight = sheetdata.meta.size.h
+    
+    local bgquaddata = sheetdata.frames["ui_"..background..".png"].frame
+    self.backgroundquad = love.graphics.newQuad(bgquaddata.x, bgquaddata.y, bgquaddata.w, bgquaddata.h, sheetdata.meta.size.w, sheetdata.meta.size.h)
+    local headerquaddata = sheetdata.frames["header_"..header..".png"].frame
+    self.headerquad = love.graphics.newQuad(headerquaddata.x, headerquaddata.y, headerquaddata.w, headerquaddata.h, sheetdata.meta.size.w, sheetdata.meta.size.h)
 
     self.subtextstr = nil
 
-    local buttonimages = {}
+    local buttonquads = {}
 
     for i = 1,#buttons do
-        buttonimages[i] = love.graphics.newImage("sprites/battleUI/"..buttons[i][1]..".png")
+        local localquad = sheetdata.frames[buttons[i][1]..".png"].frame
+        buttonquads[i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetdata.meta.size.w, sheetdata.meta.size.h)
     end
 
     self.buttonmode = 1
-    self.buttonimages = buttonimages
+    self.buttonquads = buttonquads
     self.x = x
     self.y = y
     self.targetpartymember = targetpartymember
@@ -49,13 +56,13 @@ end
 
 function BattleUi:draw(localcurrentstate, members)
     if localcurrentstate == "BATTLEUI" and current_party_member == self.targetpartymember then
-        love.graphics.draw(self.background, self.x, self.y, 0, 1.5, 1.5)
-        love.graphics.draw(self.buttonimages[self.buttonmode], self.x, self.y, 0, 1.5, 1.5)
+        love.graphics.draw(self.sheetimage, self.backgroundquad, self.x, self.y, 0, 1.5, 1.5)
+        love.graphics.draw(self.sheetimage, self.buttonquads[self.buttonmode], self.x, self.y, 0, 1.5, 1.5)
         love.graphics.setFont(HPfont)
         love.graphics.print(members[self.targetpartymember].hp, self.x+205, self.y+10, 0, 1, 1)
         love.graphics.print(members[self.targetpartymember].maxhp, self.x+265, self.y+10, 0, 1, 1)
     else
-        love.graphics.draw(self.header, self.x, self.y+54, 0, 1.5, 1.5)
+        love.graphics.draw(self.sheetimage, self.headerquad, self.x, self.y+54, 0, 1.5, 1.5)
         love.graphics.setFont(HPfont)
         love.graphics.print(members[self.targetpartymember].hp, self.x+205, self.y+64, 0, 1, 1)
         love.graphics.print(members[self.targetpartymember].maxhp, self.x+265, self.y+64, 0, 1, 1)

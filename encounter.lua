@@ -67,8 +67,19 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         Commands[i] = {}
     end
 
-    Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 308, 630, 1)
-    Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 628, 630, 2)
+    --Load BattleUi sheet and data
+
+    local BattleUISheet = love.graphics.newImage("sprites/battleUI.png")
+    local BattleSheetQuadrantData
+    local sheetjson = io.open("sprites/battleUI.json", "r")
+    if sheetjson then
+        local tempsheetarr = sheetjson:read("*a")
+        BattleSheetQuadrantData = json.decode(tempsheetarr)
+        sheetjson:close()
+    end
+
+    Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 308, 630, 1, BattleUISheet, BattleSheetQuadrantData)
+    Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 628, 630, 2, BattleUISheet, BattleSheetQuadrantData)
 
     UIs = {
         Kris1UI,
