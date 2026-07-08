@@ -4,6 +4,6 @@ function love.conf(t)
     t.window.height = 960                -- Window height
     t.window.fullscreen = false          -- Fullscreen mode (false for windowed)
     t.window.vsync = true                -- Enable vertical sync
-    t.window.resizable = false           -- Make the window non-resizable
+    t.window.resizable = true           -- Make the window non-resizable
     t.window.highdpi = true              -- Enable high DPI mode for retina displays
 end

@@ -14,6 +14,7 @@ require "encounter"
 flux = require "flux"
 tick = require "tick"
 json = require "json"
+local tlfres = require "tlfres"
 
 --Best for blurless scaling
 love.graphics.setDefaultFilter( "nearest", "nearest", 1)
@@ -22,8 +23,8 @@ love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 --Place constant values here.
 
 --Honestly I don't think I used either of these anywhere but maybe someone will need them.
-WIDTH = love.graphics.getWidth()
-HEIGHT = love.graphics.getHeight()
+WIDTH = 1280
+HEIGHT = 960
 
 ARR_STATES = { --UI Buttons to states as used in battle.current_state
                --MAGIC will also be used in ACTUI since behavior is similar enough
@@ -485,6 +486,9 @@ function love.keypressed(key)
 end
 
 function love.draw()
+    tlfres.beginRendering(WIDTH, HEIGHT)
+
+    love.graphics.setPointSize(tlfres.getScale())
 
     battle.Bg:draw()
 
@@ -542,6 +546,8 @@ function love.draw()
 
     love.graphics.setFont(Battlefont)
     love.graphics.print("FPS:"..FPS, 0, 0, 0, 1, 1)
+
+    tlfres.endRendering()
 
     FPS = nil
 
