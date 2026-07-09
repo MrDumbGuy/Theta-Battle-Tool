@@ -22,7 +22,6 @@ love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 
 --Place constant values here.
 
---Honestly I don't think I used either of these anywhere but maybe someone will need them.
 WIDTH = 1280
 HEIGHT = 960
 
