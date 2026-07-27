@@ -15,6 +15,8 @@ flux = require "flux"
 tick = require "tick"
 json = require "json"
 local tlfres = require "tlfres"
+require "item"
+require "itemmanager"
 
 --Best for blurless scaling
 love.graphics.setDefaultFilter( "nearest", "nearest", 1)
@@ -30,7 +32,7 @@ ARR_STATES = { --UI Buttons to states as used in battle.current_state
                --It still has a graphical difference (magic button over act button) but no functional one.
     "ATTACKUI",
     "ACTUI",
-    "MEMBERUI",
+    "ITEMUI",
     "SPAREUI",
     "DEFEND",
 }
@@ -220,7 +222,7 @@ local function ExecuteCommands()
     local CommandReturned
     current_party_member = current_party_member + 1
 
-    print("current_party_member @ COMMANDS:"..current_party_member)
+    print("current_party_member @ COMMANDS: "..current_party_member)
 
     if current_party_member <= #battle.party_members then
         if Commands[current_party_member][1] then --Ensure that the Command for a downed partyMember is empty.
@@ -247,10 +249,10 @@ local function ExecuteCommands()
 
         if #members_to_attack > 0 then
             current_party_member = 1
-            battle.current_state = "ATTACKING"
             for i = 1, #battle.party_members do
                 UIs[i]:subtext("")
             end
+            battle.current_state = "ATTACKING"
             ExecuteAttack()
         else
             StartBULLETS()
@@ -407,15 +409,29 @@ function love.keypressed(key)
         elseif key == "right" then
             Sole:updatePos(1)
         end
-
-    elseif battle.current_state == "MEMBERUI" then
+        
+    elseif battle.current_state == "ITEMUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)
             UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
             UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
-            --TODO: ADD SUPPORT FOR CUSTOM NEXT STATE. FOR NOW, THIS ONLY WORKS FOR ITEMS
+            love.audio.play(SND_SELECT)
+            UIs[current_party_member]:menuState(Sole, 0, 0, "MEMBERUI", battle.PartyMemberSubArray, battle)
+        elseif key == "left" then
+            Sole:updatePos(-1)
+        elseif key == "right" then
+            Sole:updatePos(1)
+        end
+
+    elseif battle.current_state == "MEMBERUI" then
+        if key == "x" then
+            love.audio.play(SND_SELECT)
+            UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+            battle.current_state = "ITEMUI"
+            battle.party_members[current_party_member]:set_animation(0)
+        elseif key == "z" then
             love.audio.play(SND_SELECT)
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -470,7 +486,7 @@ function love.keypressed(key)
         end
 
     elseif  battle.current_state == "ATTACKING" and key == "z" then
-        
+
         ExecuteAttack()
 
     elseif battle.current_state == "BATTLEOVER" then
