@@ -428,7 +428,6 @@ function love.keypressed(key)
     elseif battle.current_state == "MEMBERUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
             battle.current_state = "ITEMUI"
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
