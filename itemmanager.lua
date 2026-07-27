@@ -17,9 +17,10 @@ function ItemManager:useItem()
     local itemToUse =  self.toUse[self.useIndex][1]
     local memberToReceive = self.toUse[self.useIndex][2]
     local memberToUse = self.toUse[self.useIndex][3]
-    
+
     --Animate user to the item use animation
-    
+    memberToUse:set_animation(3)
+
     --Give recipient the appropiate amount of HP
 
     --Find the used item's index
