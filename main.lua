@@ -287,7 +287,7 @@ function love.keypressed(key)
             UIs[current_party_member]:subtext(nil)
             love.audio.play(SND_SELECT)
             UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[UIs[current_party_member].buttonmode], Enemysubarray, battle)
-            if battle.current_state == "MEMBERUI" then Sole:updatePosArray(battle.PartyMemberSubArray) end
+            if battle.current_state == "ITEMUI" then Sole:updatePosArray(battle.ItemSubArray) end
             battle.party_members[current_party_member]:set_animation(ARR_STATES[UIs[current_party_member].buttonmode])
             if ARR_STATES[UIs[current_party_member].buttonmode] == "DEFEND" then
 
@@ -428,7 +428,7 @@ function love.keypressed(key)
     elseif battle.current_state == "MEMBERUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)
-            battle.current_state = "ITEMUI"
+            UIs[current_party_member]:menuState(Sole, 0, 0, "ITEMUI", battle.ItemSubArray, battle)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
@@ -520,6 +520,8 @@ function love.draw()
 
     love.graphics.setColor(1,1,1,1) --If you don't set to white when drawing images, the image colors get altered.
 
+    --TODO Decouple draw calls specific to the battle from main by restructuring encounter.lua such that battle has a :draw() function
+
     for i = 1, #battle.party_members do
         battle.party_members[i]:draw()
     end
@@ -535,6 +537,7 @@ function love.draw()
 
     battle.Enemysub:draw(battle.current_state)
     battle.PartyMemberSub:draw(battle.current_state)
+    battle.ItemSub:draw(battle.current_state)
 
     for i = 1, #battle.Enemysubsubs do
         battle.Enemysubsubs[i]:draw(battle.current_state)

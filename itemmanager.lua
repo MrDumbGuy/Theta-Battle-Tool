@@ -2,13 +2,31 @@ ItemManager = Object:extend()
 
 function ItemManager:new(items, itemssubarray)
     self.items  = items
+    self.tempitem = nil
     self.itemsSubArray = itemssubarray
     self.toUse = {}
+    self.useIndex = 1
 end
 
-function ItemManager:removeItem(itemIndex, target_member_no, battle)
-    --Add the removed item along with the user, the useé into a new array
-    self.toUse[#self.toUse+1] = {battle.current_party_member, self.items[itemIndex], target_member_no}
+function ItemManager:addItem(target_member_no, current_party_member)
+    self.toUse[#self.toUse+1] = {self.tempitem, target_member_no, current_party_member}
+end
+
+function ItemManager:useItem()
+    --Grab item, user and recipient data from self.toUse[useIndex]
+    local itemToUse =  self.toUse[self.useIndex][1]
+    local memberToReceive = self.toUse[self.useIndex][2]
+    local memberToUse = self.toUse[self.useIndex][3]
+    
+    --Animate user to the item use animation
+    
+    --Give recipient the appropiate amount of HP
+
+    --Find the used item's index
+    local itemIndex
+        for i = 1, #self.items do
+            if self.items[i] == itemToUse then itemIndex = i break end
+        end
 
     --Recreate the SubArray and items array as if the removed item (index itemIndex) never existed.
         local neoItemsSubarray = self.itemsSubArray

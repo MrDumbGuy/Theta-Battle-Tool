@@ -154,14 +154,16 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.PartyMemberSub = Submenu(self.PartyMemberSubArray, {"MEMBERUI"}, nil, false)
 
     self.items = {
-        [1] = Item("Clubswich", 120),
-        [2] = Item("Clubswich", 120)
+        [1] = Item("70cm Zurna", 180),
+        [2] = Item("Ayran", 80)
     }
 
     self.ItemSubArray = {
         [1] = {"* "..self.items[1].name, 218, 771},
         [2] = {"* "..self.items[2].name, 778, 771}
     }
+
+    self.ItemSub = Submenu(self.ItemSubArray, {"ITEMUI"}, nil, false)
 
     --Load fonts!
     Battlefont = love.graphics.newFont("fonts/8bitOperatorPlus-Bold.ttf", 30)
