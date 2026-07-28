@@ -58,6 +58,8 @@ function PartyMember:new(name, xpos, ypos, animations, defaultquadrant, defaulta
         print (self.name.." special loop "..k.." : "..v)
     end
 
+    self.hpup = nil --The variable that is used to display the HP Increase of a party member (i.e. the green number next to their head)
+
 end
 
 function PartyMember:draw()
@@ -70,6 +72,15 @@ function PartyMember:draw()
 
         --If a frame somehow doesn't exist, this is displayed.
          love.graphics.draw(self.spritesheetpng, self.defaultquadrant, self.xpos, self.ypos, 0, self.size, self.size)
+
+    end
+
+    if self.hpup then
+
+        love.graphics.setColor(0,1,0,1)
+        love.graphics.setFont(Battlefont)
+        love.graphics.print(self.hpup, self.xpos + 90, self.ypos - 30) -- Draw offsetted hp increase amount above and to the right of member's head
+        love.graphics.setColor(1,1,1,1)
 
     end
 
@@ -144,4 +155,13 @@ end
 
 function PartyMember:spare(local_enemy)
     local_enemy:spared()
+end
+
+function PartyMember:hpUp(hp)
+    self.hpup = hp
+    self.hp = self.hp + hp
+    if self.hp > self.maxhp then
+        self.hp = self.maxhp
+        self.hpup = "MAX"
+    end
 end
