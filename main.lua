@@ -67,6 +67,8 @@ end
 
 function love.update(dt)
 
+    --TODO: Decouple battle updates to be handled by battle:update()
+
     for i = 1, #enemies do
         if enemies[i] then
             enemies[i]:update(dt, battle.current_state)
@@ -91,8 +93,8 @@ function love.update(dt)
 
     --print(love.mouse.getX().." , "..love.mouse.getY()) --I use this when checking positions in the UI.
 
-    if not MUS_Battlemusic:isPlaying() then
-        love.audio.play(MUS_Battlemusic)
+    if not battle.MUS_Battlemusic:isPlaying() then
+        love.audio.play(battle.MUS_Battlemusic)
     end
 
     tick.update(dt)
@@ -225,7 +227,7 @@ local function ExecuteCommands()
     print("current_party_member @ COMMANDS: "..current_party_member)
 
     if current_party_member <= #battle.party_members then
-        if Commands[current_party_member][1] then --Ensure that the Command for a downed partyMember is empty.
+        if Commands[current_party_member][1] then --TODO Ensure that the Command for a downed partyMember is empty.
             UIs[current_party_member]:subtext(Commands[current_party_member][2])
             CommandReturned = Commands[current_party_member][1]()
             if CommandReturned then print("Command executed: "..CommandReturned.." by: "..battle.party_members[current_party_member].name) end
@@ -245,6 +247,10 @@ local function ExecuteCommands()
         Commands = {}
         for i = 1, #battle.party_members do
             Commands[i] = {}
+        end
+
+        for i = 1, #battle.party_members do
+            battle.party_members[i].hpup = nil
         end
 
         if #members_to_attack > 0 then
@@ -287,7 +293,6 @@ function love.keypressed(key)
             UIs[current_party_member]:subtext(nil)
             love.audio.play(SND_SELECT)
             UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[UIs[current_party_member].buttonmode], Enemysubarray, battle)
-            if battle.current_state == "ITEMUI" then Sole:updatePosArray(battle.ItemSubArray) end
             battle.party_members[current_party_member]:set_animation(ARR_STATES[UIs[current_party_member].buttonmode])
             if ARR_STATES[UIs[current_party_member].buttonmode] == "DEFEND" then
 
@@ -384,7 +389,6 @@ function love.keypressed(key)
 
             Commands[current_party_member][1] = function()
 
-
                 battle.party_members[current_party_member]:act(selected_enemies[current_party_member], actname[current_party_member], UIs[current_party_member])
                 return "ACTCOMMAND"
 
@@ -418,6 +422,8 @@ function love.keypressed(key)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
+            battle.ItemManager.tempitem = battle.items[Sole.currentmenuposition]
+            print(battle.ItemManager.tempitem.name)
             UIs[current_party_member]:menuState(Sole, 0, 0, "MEMBERUI", battle.PartyMemberSubArray, battle)
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -432,6 +438,31 @@ function love.keypressed(key)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
+
+
+            local itemtext = battle.ItemManager:generateItemText(Sole.currentmenuposition, current_party_member, battle.party_members)
+            battle.ItemManager:addItem(Sole.currentmenuposition, current_party_member)
+
+            Commands[current_party_member][1] = function()
+
+                battle.ItemManager:useItem(battle)
+                return "ITEMCOMMAND" --Functionally the same as an ACTCOMMAND, but labelled seperately for debugging purposes and code cleanliness.
+
+            end
+
+            Commands[current_party_member][2] = itemtext
+            current_party_member = current_party_member + 1
+            if current_party_member > #battle.party_members then
+                current_party_member = 0
+                battle.current_state = "COMMANDS"
+                ExecuteCommands()
+            else
+                UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                battle.current_state = "BATTLEUI"
+            end
+
+            selected_enemy = nil
+
         elseif key == "left" then
             Sole:updatePos(-1)
         elseif key == "right" then

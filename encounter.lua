@@ -13,15 +13,15 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.Box = Battlebox()
 
     local kris_anims = {
-        --The order of the first 10 animations must be the exact same for every party member.
+        --The order of these first 10 animations must be the exact same for every party member.
         --Other misc. animations may be ordered on a per-character basis.
 
         --[id] = {"name", total number of frames, fps, loops, offsetX, offsetY}
         [0] = {"krisIdle", 6, 6, true, 0, 0},
         [1] = {"krisAttack", 8, 15, false, 5, -20},
         [2] = {"krisAct", 11, 11, false, 0, 0},
-        [3] = {"krisItem", 8, 12, false, -7, -5},
-        [4] = {"krisAct", 11, 11, false, 0, 0}, --I'm fairly confident that Kris uses the same animation for sparing and acting
+        [3] = {"krisItem", 8, 12, false, -21, -15},
+        [4] = {"krisAct", 11, 11, false, 0, 0}, --I'm fairly confident that Kris uses the same animation for sparing and acting.
         [5] = {"krisDefend", 6, 12, false, 0, -7},
         [6] = {"krisAttackWait", 1, 1, true, 0, -20},
         [7] = {"krisActWait", 1, 1, true, 0, 0},
@@ -41,7 +41,6 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     local krisSpecialLoops = {
         [5] = 9,
-        [3] = 0
     }
 
     local krissheet = love.graphics.newImage("sprites/krissheet.png")
@@ -166,7 +165,10 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     self.ItemSub = Submenu(self.ItemSubArray, {"ITEMUI"}, nil, false)
 
+    self.ItemManager = ItemManager(self.items, self.ItemSubArray)
+
     --Load fonts!
+    --These example font objects must be present in every encounter.
     Battlefont = love.graphics.newFont("fonts/8bitOperatorPlus-Bold.ttf", 30)
     Goldenfont = love.graphics.newImageFont("sprites/goldennumeralfont.png", "0123456789+-%/ ")--The mercy increased font
     HPfont = love.graphics.newFont("fonts/deltarune-hp-font.otf", 14)
@@ -183,12 +185,12 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     --Music
     --This should allow one to dynamically swap songs
     --Maybe a jukebox enemy with a unique act could change the song :)
-    MUS_Vaporbattle = love.audio.newSource("music/battle_vapor.ogg", "stream")
-    MUS_Churchbattle = love.audio.newSource("music/ch4_battle.ogg", "stream")
+    self.MUS_Vaporbattle = love.audio.newSource("music/battle_vapor.ogg", "stream")
+    self.MUS_Churchbattle = love.audio.newSource("music/ch4_battle.ogg", "stream")
 
-    MUS_Battlemusic = MUS_Churchbattle
+    self.MUS_Battlemusic = self.MUS_Churchbattle
 
-    love.audio.play(MUS_Battlemusic)
+    love.audio.play(self.MUS_Battlemusic)
 
     --Sounds
     SND_MENUMOVE = love.audio.newSource("sfx/snd_menumove.wav", "static")
