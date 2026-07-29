@@ -291,8 +291,23 @@ function love.keypressed(key)
         elseif key == "z" then
             UIs[current_party_member]:subtext(nil)
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[UIs[current_party_member].buttonmode], Enemysubarray, battle)
-            battle.party_members[current_party_member]:set_animation(ARR_STATES[UIs[current_party_member].buttonmode])
+
+            --Quick exception for selecting items
+            if ARR_STATES[UIs[current_party_member].buttonmode] == "ITEMUI" then
+                if #battle.ItemManager.itemsSubArray > 0 then
+                    Sole:updatePosArray(battle.ItemManager.itemsSubArray)
+                    UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[UIs[current_party_member].buttonmode], battle.ItemManager.itemsSubArray, battle)
+                else
+                    UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                end
+            else
+                UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[UIs[current_party_member].buttonmode], Enemysubarray, battle)
+            end
+
+            if battle.current_state ~= "BATTLEUI" then
+                battle.party_members[current_party_member]:set_animation(ARR_STATES[UIs[current_party_member].buttonmode])
+            end
+
             if ARR_STATES[UIs[current_party_member].buttonmode] == "DEFEND" then
 
                 --No extra commands neeed for the party member to defend
