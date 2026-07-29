@@ -288,11 +288,19 @@ function love.keypressed(key)
             UIs[current_party_member]:changeselect(1)
         elseif key == "left" then
             UIs[current_party_member]:changeselect(-1)
+        elseif key == "x" and current_party_member ~= 1 then
+            if Commands[current_party_member-1][1]() == "ITEMCOMMAND" then
+                battle.ItemManager:undoAddition()
+            end
+            battle.current_state = "BATTLEUI"
+            Commands[current_party_member][1] = nil
+            Commands[current_party_member][2] = nil
+            current_party_member = current_party_member - 1
         elseif key == "z" then
             UIs[current_party_member]:subtext(nil)
             love.audio.play(SND_SELECT)
 
-            --Quick exception for selecting items
+            --Quick exception for selecting items versus any submenus with the enemy list
             if ARR_STATES[UIs[current_party_member].buttonmode] == "ITEMUI" then
                 if #battle.ItemManager.itemsSubArray > 0 then
                     Sole:updatePosArray(battle.ItemManager.itemsSubArray)
@@ -403,7 +411,7 @@ function love.keypressed(key)
 
             Commands[current_party_member][1] = function()
 
-                battle.party_members[current_party_member]:act(selected_enemies[current_party_member], actname[current_party_member], UIs[current_party_member])
+                if battle.current_state == "COMMANDS" then battle.party_members[current_party_member]:act(selected_enemies[current_party_member], actname[current_party_member], UIs[current_party_member]) end
                 return "ACTCOMMAND"
 
             end
@@ -459,7 +467,7 @@ function love.keypressed(key)
 
             Commands[current_party_member][1] = function()
 
-                battle.ItemManager:useItem(battle)
+                if battle.current_state == "COMMANDS" then battle.ItemManager:useItem(battle) end
                 return "ITEMCOMMAND" --Functionally the same as an ACTCOMMAND, but labelled seperately for debugging purposes and code cleanliness.
 
             end
@@ -497,10 +505,14 @@ function love.keypressed(key)
 
             Commands[current_party_member][1] = function()
 
-                battle.party_members[current_party_member]:spare(selected_enemies[current_party_member])
-                battle.party_members[current_party_member]:set_animation(4)
-
+                if battle.current_state == "COMMANDS" then
+                    battle.party_members[current_party_member]:spare(selected_enemies[current_party_member])
+                    battle.party_members[current_party_member]:set_animation(4)
                 end
+
+                return "SPARECOMMAND"
+
+            end
 
             Commands[current_party_member][2] = "* "..battle.party_members[current_party_member].name.." spared "..selected_enemy.name.."!"
 
