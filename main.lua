@@ -21,7 +21,6 @@ require "itemmanager"
 --Best for blurless scaling
 love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 
-
 --Place constant values here.
 
 WIDTH = 1280
@@ -413,7 +412,7 @@ function love.keypressed(key)
         elseif key == "right" then
             Sole:updatePos(1)
         end
-        
+
     elseif battle.current_state == "ITEMUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)

@@ -51,7 +51,7 @@ function PartyMember:new(name, xpos, ypos, animations, defaultquadrant, defaulta
         ["SPAREUI"] = 8,
         ["DEFEND"] = 5,
         ["ATTACK"] = 1,
-        
+
     }
 
     for k, v in pairs(self.animationSpecialLoops) do

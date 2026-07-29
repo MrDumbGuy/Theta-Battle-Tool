@@ -14,7 +14,7 @@ function ItemManager:addItem(target_member_no, current_party_member)
     end
 
     local itemIndex
-    
+
     --Find the used item's index
     for i = 1, #self.items do
         if self.items[i] == self.tempitem then itemIndex = i break end
