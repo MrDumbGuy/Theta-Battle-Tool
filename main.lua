@@ -534,9 +534,6 @@ function love.draw()
     tlfres.beginRendering(WIDTH, HEIGHT)
 
     love.graphics.setPointSize(tlfres.getScale())
-    tlfres.beginRendering(WIDTH, HEIGHT)
-
-    love.graphics.setPointSize(tlfres.getScale())
 
     battle.Bg:draw()
 
@@ -597,8 +594,6 @@ function love.draw()
 
     love.graphics.setFont(Battlefont)
     love.graphics.print("FPS:"..FPS, 0, 0, 0, 1, 1)
-
-    tlfres.endRendering()
 
     tlfres.endRendering()
 
