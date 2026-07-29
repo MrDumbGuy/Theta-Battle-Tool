@@ -12,7 +12,23 @@ function ItemManager:addItem(target_member_no, current_party_member)
     for i = 1,3 do
         print(self.toUse[#self.toUse][i])
     end
-    self.tempitem = nil
+
+    local itemIndex
+    
+    --Find the used item's index
+    for i = 1, #self.items do
+        if self.items[i] == self.tempitem then itemIndex = i break end
+    end
+
+--Recreate the SubArray and items array as if the removed item (index itemIndex) never existed.
+    local neoItemsSubarray = self.itemsSubArray
+    for i = itemIndex, #self.itemsSubArray-1 do
+        neoItemsSubarray[i][1] = self.itemsSubArray[i+1][1]
+    end
+    self.itemsSubArray = neoItemsSubarray
+    self.itemsSubArray[#self.itemsSubArray] = nil
+
+    table.remove(self.items, itemIndex)
 end
 
 function ItemManager:generateItemText(target_member_no, user_member_no, party_members)
@@ -39,23 +55,6 @@ function ItemManager:useItem(battle)
 
         --Give recipient the appropiate amount of HP
         memberToReceive:hpUp(itemToUse.hp)
-
-        --Find the used item's index
-        local itemIndex
-        print(self.items)
-            for i = 1, #self.items do
-                if self.items[i] == itemToUse then itemIndex = i break end
-            end
-
-        --Recreate the SubArray and items array as if the removed item (index itemIndex) never existed.
-            local neoItemsSubarray = self.itemsSubArray
-            for i = itemIndex, #self.itemsSubArray-1 do
-                neoItemsSubarray[i][1] = self.itemsSubArray[i+1][1]
-            end
-            self.itemsSubArray = neoItemsSubarray
-            self.itemsSubArray[#self.itemsSubArray] = nil
-
-            table.remove(self.items, itemIndex)
 
     end
 
