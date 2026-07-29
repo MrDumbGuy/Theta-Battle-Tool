@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 Object = require "classic"
 require "partyMember"
 require "background"
