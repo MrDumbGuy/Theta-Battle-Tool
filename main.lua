@@ -38,7 +38,7 @@ ARR_STATES = { --UI Buttons to states as used in battle.current_state
 selected_enemy = nil
 
 members_to_attack = {}
-enemies_to_attack = {}
+local enemies_to_attack = {}
 local battlebars = {}
 
 local actname = {}
@@ -175,7 +175,7 @@ local function ExecuteAttack(enemies)
     elseif current_party_member <= #battlebars then
 
         if battlebars[current_party_member] then
-            battlebars[current_party_member]:attack(enemies)
+            battlebars[current_party_member]:attack(enemies, enemies_to_attack)
         end
 
     end

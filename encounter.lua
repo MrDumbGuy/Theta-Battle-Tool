@@ -149,9 +149,9 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.Enemysub = Submenu(Enemysubarray, {"ATTACKUI", "ACTUI", "SPAREUI"}, nil, true)
 
     self.Enemysubsubs = {
-        Submenu(self.act_sub_subs[self.enemies[1]], {"ACTSUBSUB"}, enemies[1], false),
-        Submenu(self.act_sub_subs[self.enemies[2]], {"ACTSUBSUB"}, enemies[2], false),
-        Submenu(self.act_sub_subs[self.enemies[3]], {"ACTSUBSUB"}, enemies[3], false),
+        Submenu(self.act_sub_subs[self.enemies[1]], {"ACTSUBSUB"}, self.enemies[1], false),
+        Submenu(self.act_sub_subs[self.enemies[2]], {"ACTSUBSUB"}, self.enemies[2], false),
+        Submenu(self.act_sub_subs[self.enemies[3]], {"ACTSUBSUB"}, self.enemies[3], false),
     }
 
     self.PartyMemberSubArray = {
@@ -212,6 +212,9 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
 end
 
+--You can customize drawing and update logic, but this is not recommended for beginners.
+--You may opt to keep the same rendering loop. This was only separated from the engine
+--In case someone needs wacky visuals (Like Pink's Mad Dummies in the Chaper 5 battle)
 function Encounter:draw()
 
     for i = 1, #self.party_members do
@@ -225,12 +228,11 @@ function Encounter:draw()
     end
 
     self.Enemysub:draw(self.current_state, self.enemies)
+    for __, sub in pairs(self.Enemysubsubs) do
+        sub:draw(self.current_state, self.enemies)
+    end
     self.PartyMemberSub:draw(self.current_state, self.enemies)
     self.ItemSub:draw(self.current_state, self.enemies)
-
-    for i = 1, #self.Enemysubsubs do
-        self.Enemysubsubs[i]:draw(self.current_state)
-    end
 
     self.Box:draw()
 

@@ -39,7 +39,7 @@ function Submenu:draw(localcurrentstate, enemies)
 
     for i = 1, #self.targetstatearr do
         if self.targetstatearr[i] == localcurrentstate then
-            targetstate = true
+            targetstate = true break
         end
     end
 
