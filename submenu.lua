@@ -34,7 +34,7 @@ function Submenu:updatePosArray(posarray)
     print(self.positions[1])
 end
 
-function Submenu:draw(localcurrentstate)
+function Submenu:draw(localcurrentstate, enemies)
     local targetstate = false
 
     for i = 1, #self.targetstatearr do

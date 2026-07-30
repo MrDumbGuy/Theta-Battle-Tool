@@ -1,5 +1,7 @@
 --The project now supports multiple party members!
 
+require "animate"
+
 PartyMember = Object:extend()
 
 function PartyMember:new(name, xpos, ypos, animations, defaultquadrant, defaultanim, animationSpecialLoops, spritesheetarray, spritesheetpng, size, maxhp, ATK, DEF)
@@ -100,7 +102,7 @@ function PartyMember:set_animation(animation)
         self.currentframecount = 1
 end
 
-function PartyMember:attack(local_enemy, mult)
+function PartyMember:attack(local_enemy, mult, enemies)
 
     love.audio.play(SND_ATTACK)
     print(self.name.." attacked "..local_enemy.name)

@@ -5,9 +5,7 @@ require "battleui"
 require "battlebar"
 require "soul"
 require "submenu"
-require "mizzle"
 require "battlebox"
-require "animate"
 require "bullet"
 require "encounter"
 flux = require "flux"
@@ -41,7 +39,7 @@ selected_enemy = nil
 
 members_to_attack = {}
 enemies_to_attack = {}
-battlebars = {}
+local battlebars = {}
 
 local actname = {}
 local actindex = {}
@@ -67,32 +65,12 @@ function love.update(dt)
 
     --TODO: Decouple battle updates to be handled by battle:update()
 
-    for i = 1, #enemies do
-        if enemies[i] then
-            enemies[i]:update(dt, battle.current_state)
-        end
-    end
-
-    for i = 1, #battle.party_members do
-        battle.party_members[i]:update(dt)
-    end
+    battle:update(dt)
 
     for i = 1, #battlebars do
         if battlebars[i] then
             battlebars[i]:update(dt)
         end
-    end
-
-    battle.Bg:update(dt)
-
-    Sole:update(dt, battle.current_state)
-
-    battle.Box:update(dt)
-
-    --print(love.mouse.getX().." , "..love.mouse.getY()) --I use this when checking positions in the UI.
-
-    if not battle.MUS_Battlemusic:isPlaying() then
-        love.audio.play(battle.MUS_Battlemusic)
     end
 
     tick.update(dt)
@@ -101,9 +79,9 @@ function love.update(dt)
 
     local battleovercheck = true
 
-    for i = 1, #enemies do
-        if enemies[i] then
-            if enemies[i].hp > 0 then
+    for i = 1, #battle.enemies do
+        if battle.enemies[i] then
+            if battle.enemies[i].hp > 0 then
                 battleovercheck = false
                 break
             end
@@ -168,7 +146,7 @@ local function StartBULLETS()
         battle.current_state = "BULLETS"
 end
 
-local function ExecuteAttack()
+local function ExecuteAttack(enemies)
 
     print("ExecuteAttack()")
     print("current_party_member: "..current_party_member)
@@ -197,7 +175,7 @@ local function ExecuteAttack()
     elseif current_party_member <= #battlebars then
 
         if battlebars[current_party_member] then
-            battlebars[current_party_member]:attack()
+            battlebars[current_party_member]:attack(enemies)
         end
 
     end
@@ -349,8 +327,8 @@ function love.keypressed(key)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
-            selected_enemy = enemies[Sole.currentmenuposition]
-            selected_enemies[current_party_member] = enemies[Sole.currentmenuposition]
+            selected_enemy = battle.enemies[Sole.currentmenuposition]
+            selected_enemies[current_party_member] = battle.enemies[Sole.currentmenuposition]
 
             enemies_to_attack[#enemies_to_attack+1] = selected_enemy
             Commands[current_party_member][1] = function ()
@@ -385,8 +363,8 @@ function love.keypressed(key)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
-            selected_enemy = enemies[Sole.currentmenuposition]
-            selected_enemies[current_party_member] = enemies[Sole.currentmenuposition]
+            selected_enemy = battle.enemies[Sole.currentmenuposition]
+            selected_enemies[current_party_member] = battle.enemies[Sole.currentmenuposition]
             UIs[current_party_member]:menuState(Sole, 0, 0, "ACTSUBSUB", battle.act_sub_subs[selected_enemy], battle)
             Sole:updatePosArray(battle.act_sub_subs[selected_enemy])
         elseif key == "left" then
@@ -498,8 +476,8 @@ function love.keypressed(key)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
-            selected_enemy = enemies[Sole.currentmenuposition]
-            selected_enemies[current_party_member] = enemies[Sole.currentmenuposition]
+            selected_enemy = battle.enemies[Sole.currentmenuposition]
+            selected_enemies[current_party_member] = battle.enemies[Sole.currentmenuposition]
             print(selected_enemies[current_party_member].name.." added to queue to be spared.")
 
             Commands[current_party_member][1] = function()
@@ -542,7 +520,7 @@ function love.keypressed(key)
 
     elseif  battle.current_state == "ATTACKING" and key == "z" then
 
-        ExecuteAttack()
+        ExecuteAttack(battle.enemies)
 
     elseif battle.current_state == "BATTLEOVER" then
         love.event.quit()
@@ -578,32 +556,15 @@ function love.draw()
 
     --TODO Decouple draw calls specific to the battle from main by restructuring encounter.lua such that battle has a :draw() function
 
-    for i = 1, #battle.party_members do
-        battle.party_members[i]:draw()
-    end
+    battle:draw()
 
     for i = 1, #UIs do
         UIs[i]:draw(battle.current_state, battle.party_members)
-    end
-    for i = 1,#enemies do
-        if enemies[i] then
-            enemies[i]:draw()
-        end
-    end
-
-    battle.Enemysub:draw(battle.current_state)
-    battle.PartyMemberSub:draw(battle.current_state)
-    battle.ItemSub:draw(battle.current_state)
-
-    for i = 1, #battle.Enemysubsubs do
-        battle.Enemysubsubs[i]:draw(battle.current_state)
     end
 
     for i = 1, #battlebars do
         battlebars[i]:draw()
     end
-
-    battle.Box:draw()
 
     Sole:draw(battle.current_state)
 

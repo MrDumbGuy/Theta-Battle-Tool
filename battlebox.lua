@@ -1,3 +1,5 @@
+require "animate"
+
 Battlebox = Object:extend()
 
 function Battlebox:new()

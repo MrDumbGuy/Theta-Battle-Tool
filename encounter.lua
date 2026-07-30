@@ -6,6 +6,11 @@
     2) The code here will serve as an example encounter to modify
         This will be much easier to modify compared to main.lua, as it contained engine code alongside the encounter configuration
 ]]
+
+--Load your custom enemies in here!
+
+require "mizzle"
+
 Encounter = Object:extend()
 
 function Encounter:new() --Called once in love.load(). Initialise all your encounter-specific variables and arrays here.
@@ -78,8 +83,8 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         sheetjson:close()
     end
 
-    Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 308, 630, 1, BattleUISheet, BattleSheetQuadrantData)
-    Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 628, 630, 2, BattleUISheet, BattleSheetQuadrantData)
+    local Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 308, 630, 1, BattleUISheet, BattleSheetQuadrantData)
+    local Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 628, 630, 2, BattleUISheet, BattleSheetQuadrantData)
 
     UIs = {
         Kris1UI,
@@ -109,9 +114,11 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         mizzlearr = json.decode(tempmizzlearr)
     end
 
-    enemies[1] = Mizzle("Mizzr", 980, 102, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
-    enemies[2] = Mizzle("Mizzy", 980, 252, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
-    enemies[3] = Mizzle("Mizzle", 980, 402, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
+    self.enemies = {}
+
+    self.enemies[1] = Mizzle("Mizzr", 980, 102, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
+    self.enemies[2] = Mizzle("Mizzy", 980, 252, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
+    self.enemies[3] = Mizzle("Mizzle", 980, 402, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
 
     --Submenus and their options
     --These get used to generate the submenus' text and their positions
@@ -119,21 +126,21 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     Enemysubarray = { --The array used when generating a submenu with the enemies' names
                       --You must define the positions of the enemy names yourself.
-        [1] = {"* "..enemies[1].name, 218, 771},
-        [2] = {"* "..enemies[2].name, 778, 771},
-        [3] = {"* "..enemies[3].name, 218, 851},
+        [1] = {"* "..self.enemies[1].name, 218, 771},
+        [2] = {"* "..self.enemies[2].name, 778, 771},
+        [3] = {"* "..self.enemies[3].name, 218, 851},
     }
 
     self.act_sub_subs = { --ACT -> enemies[i] (in your original array) -> These show up
-        [enemies[1]] = { --Handle these in enemies[1]:act(actname)
+        [self.enemies[1]] = { --Handle these in enemies[1]:act(actname)
             [1] = {"* Alarm", 218, 771, function () return "* Mizzr is awoken!\n* This sounds like a bad idea." end},
             [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[current_party_member].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
         },
-        [enemies[2]] = {
+        [self.enemies[2]] = {
             [1] = {"* Alarm", 218, 771, function () return "* Mizzy is awoken!\n* This sounds like a bad idea." end},
             [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[current_party_member].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
         },
-        [enemies[3]] = {
+        [self.enemies[3]] = {
             [1] = {"* Alarm", 218, 771, function () return "* Mizzle is awoken!\n* This sounds like a bad idea." end},
             [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[current_party_member].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
         },
@@ -142,9 +149,9 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.Enemysub = Submenu(Enemysubarray, {"ATTACKUI", "ACTUI", "SPAREUI"}, nil, true)
 
     self.Enemysubsubs = {
-        Submenu(self.act_sub_subs[enemies[1]], {"ACTSUBSUB"}, enemies[1], false),
-        Submenu(self.act_sub_subs[enemies[2]], {"ACTSUBSUB"}, enemies[2], false),
-        Submenu(self.act_sub_subs[enemies[3]], {"ACTSUBSUB"}, enemies[3], false),
+        Submenu(self.act_sub_subs[self.enemies[1]], {"ACTSUBSUB"}, enemies[1], false),
+        Submenu(self.act_sub_subs[self.enemies[2]], {"ACTSUBSUB"}, enemies[2], false),
+        Submenu(self.act_sub_subs[self.enemies[3]], {"ACTSUBSUB"}, enemies[3], false),
     }
 
     self.PartyMemberSubArray = {
@@ -203,4 +210,52 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     --These aren't needed after love.load, so they are nullified to save from memory.
 
+end
+
+function Encounter:draw()
+
+    for i = 1, #self.party_members do
+        self.party_members[i]:draw()
+    end
+
+    for i = 1,#self.enemies do
+        if self.enemies[i] then
+            self.enemies[i]:draw()
+        end
+    end
+
+    self.Enemysub:draw(self.current_state, self.enemies)
+    self.PartyMemberSub:draw(self.current_state, self.enemies)
+    self.ItemSub:draw(self.current_state, self.enemies)
+
+    for i = 1, #self.Enemysubsubs do
+        self.Enemysubsubs[i]:draw(self.current_state)
+    end
+
+    self.Box:draw()
+
+end
+
+function Encounter:update(dt)
+    for i = 1, #self.enemies do
+        if self.enemies[i] then
+            self.enemies[i]:update(dt, self.current_state, self.enemies)
+        end
+    end
+
+    for i = 1, #self.party_members do
+        self.party_members[i]:update(dt)
+    end
+
+    self.Bg:update(dt)
+
+    Sole:update(dt, self.current_state)
+
+    self.Box:update(dt)
+
+    --print(love.mouse.getX().." , "..love.mouse.getY()) --I use this when checking positions in the UI.
+
+    if not self.MUS_Battlemusic:isPlaying() then
+        love.audio.play(self.MUS_Battlemusic)
+    end
 end

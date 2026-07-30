@@ -1,5 +1,7 @@
 -- Every unique enemy class must have its own file. Don't try to make a Froggit as a Mizzle().
 
+require "animate"
+
 Mizzle = Object:extend()
 
 function Mizzle:new(name, x, y, animations, spritesheet, spritesheetarray, defaultanim, size, maxhp)
@@ -129,7 +131,7 @@ function Mizzle:draw()
 
 end
 
-function Mizzle:remove()
+function Mizzle:remove(enemies)
 
 
     local toRemove --index of the enemy to remove from the list
@@ -175,7 +177,7 @@ function Mizzle:spared()
     print(self.name.." Mercy at: "..self.mercy)
 end
 
-function Mizzle:update(dt, localcurrentstate)
+function Mizzle:update(dt, localcurrentstate, enemies)
 
     if localcurrentstate == "BULLETS" then
         if self.mercyup then
@@ -200,6 +202,6 @@ function Mizzle:update(dt, localcurrentstate)
     end
 
     if (self.hp <= 0 or self.mercied) and self.x >= 1750 then
-        self:remove()
+        self:remove(enemies)
     end
 end
