@@ -94,7 +94,7 @@ function love.update(dt)
 
     if battle.current_state == "BATTLEOVER" then
         for i = 1, #battle.party_members do
-            UIs[i]:subtext("* Battle is over!\n* Press any key to exit")
+            battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit")
         end
         Sole:updatePosArray(nil)
     end
@@ -116,14 +116,14 @@ local function BULLETSCleanup()
         actindex = {}
         for i = 1, #battle.party_members do
             Commands[i] = {}
-            UIs[i].buttonmode = 1
+            battle.UIs[i].buttonmode = 1
         end
     collectgarbage("collect")
 
     for i = 1, #battle.party_members do
         battle.party_members[i].isdefending = false
         if battle.party_members[i].hp > 0 then battle.party_members[i]:set_animation(0) end
-        UIs[i]:subtext("* A wild battle commentary appeared!")
+        battle.UIs[i]:subtext("* A wild battle commentary appeared!")
     end
 
 end
@@ -137,7 +137,7 @@ local function StartBULLETS()
 
         current_party_member = 1
         for i = 1, #battle.party_members do
-            UIs[i]:subtext("* A wild battle commentary appeared!")
+            battle.UIs[i]:subtext("* A wild battle commentary appeared!")
         end
         battle.Box:set_animation(1)
         Sole:updateLimits(battle.Box)
@@ -204,7 +204,7 @@ local function ExecuteCommands()
 
     if current_party_member <= #battle.party_members then
         if Commands[current_party_member][1] then --TODO Ensure that the Command for a downed partyMember is empty.
-            UIs[current_party_member]:subtext(Commands[current_party_member][2])
+            battle.UIs[current_party_member]:subtext(Commands[current_party_member][2])
             CommandReturned = Commands[current_party_member][1]()
             if CommandReturned then print("Command executed: "..CommandReturned.." by: "..battle.party_members[current_party_member].name) end
         end
@@ -232,7 +232,7 @@ local function ExecuteCommands()
         if #members_to_attack > 0 then
             current_party_member = 1
             for i = 1, #battle.party_members do
-                UIs[i]:subtext("")
+                battle.UIs[i]:subtext("")
             end
             battle.current_state = "ATTACKING"
             ExecuteAttack()
@@ -262,9 +262,9 @@ function love.keypressed(key)
     if battle.current_state == "BATTLEUI" then --The main battle menu. If you see the five buttons, you're in this state.
 
         if key == "right" then
-            UIs[current_party_member]:changeselect(1)
+            battle.UIs[current_party_member]:changeselect(1)
         elseif key == "left" then
-            UIs[current_party_member]:changeselect(-1)
+            battle.UIs[current_party_member]:changeselect(-1)
         elseif key == "x" and current_party_member ~= 1 then
             if Commands[current_party_member-1][1]() == "ITEMCOMMAND" then
                 battle.ItemManager:undoAddition()
@@ -274,26 +274,26 @@ function love.keypressed(key)
             Commands[current_party_member][2] = nil
             current_party_member = current_party_member - 1
         elseif key == "z" then
-            UIs[current_party_member]:subtext(nil)
+            battle.UIs[current_party_member]:subtext(nil)
             love.audio.play(SND_SELECT)
 
             --Quick exception for selecting items versus any submenus with the enemy list
-            if ARR_STATES[UIs[current_party_member].buttonmode] == "ITEMUI" then
+            if ARR_STATES[battle.UIs[current_party_member].buttonmode] == "ITEMUI" then
                 if #battle.ItemManager.itemsSubArray > 0 then
                     Sole:updatePosArray(battle.ItemManager.itemsSubArray)
-                    UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[UIs[current_party_member].buttonmode], battle.ItemManager.itemsSubArray, battle)
+                    battle.UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[battle.UIs[current_party_member].buttonmode], battle.ItemManager.itemsSubArray, battle)
                 else
-                    UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                    battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
                 end
             else
-                UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[UIs[current_party_member].buttonmode], Enemysubarray, battle)
+                battle.UIs[current_party_member]:menuState(Sole, 631, 471, ARR_STATES[battle.UIs[current_party_member].buttonmode], Enemysubarray, battle)
             end
 
             if battle.current_state ~= "BATTLEUI" then
-                battle.party_members[current_party_member]:set_animation(ARR_STATES[UIs[current_party_member].buttonmode])
+                battle.party_members[current_party_member]:set_animation(ARR_STATES[battle.UIs[current_party_member].buttonmode])
             end
 
-            if ARR_STATES[UIs[current_party_member].buttonmode] == "DEFEND" then
+            if ARR_STATES[battle.UIs[current_party_member].buttonmode] == "DEFEND" then
 
                 --No extra commands neeed for the party member to defend
                 Commands[current_party_member][1] = function ()
@@ -311,7 +311,7 @@ function love.keypressed(key)
                     battle.current_state = "COMMANDS"
                     ExecuteCommands()
                 else
-                    UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                    battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
                     battle.current_state = "BATTLEUI"
                 end
                 selected_enemy = nil
@@ -322,8 +322,8 @@ function love.keypressed(key)
 
         if key == "x" then
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
-            UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
+            battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
@@ -344,7 +344,7 @@ function love.keypressed(key)
                 battle.current_state = "COMMANDS"
                 ExecuteCommands()
             else
-                UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
                 battle.current_state = "BATTLEUI"
             end
                 selected_enemy = nil
@@ -358,14 +358,14 @@ function love.keypressed(key)
     elseif battle.current_state == "ACTUI" then --This is where you select which enemy to act with
         if key == "x" then
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
-            UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
+            battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             selected_enemy = battle.enemies[Sole.currentmenuposition]
             selected_enemies[current_party_member] = battle.enemies[Sole.currentmenuposition]
-            UIs[current_party_member]:menuState(Sole, 0, 0, "ACTSUBSUB", battle.act_sub_subs[selected_enemy], battle)
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "ACTSUBSUB", battle.act_sub_subs[selected_enemy], battle)
             Sole:updatePosArray(battle.act_sub_subs[selected_enemy])
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -377,7 +377,7 @@ function love.keypressed(key)
         if key == "x" then
             love.audio.play(SND_SELECT)
             selected_enemy = nil
-            UIs[current_party_member]:menuState(Sole, 0, 0, "ACTUI", Enemysubarray, battle)
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "ACTUI", Enemysubarray, battle)
             battle.party_members[current_party_member]:set_animation(0)
 
         elseif key == "z" then
@@ -388,7 +388,7 @@ function love.keypressed(key)
 
             Commands[current_party_member][1] = function()
 
-                if battle.current_state == "COMMANDS" then battle.party_members[current_party_member]:act(selected_enemies[current_party_member], actname[current_party_member], UIs[current_party_member]) end
+                if battle.current_state == "COMMANDS" then battle.party_members[current_party_member]:act(selected_enemies[current_party_member], actname[current_party_member], battle.UIs[current_party_member]) end
                 return "ACTCOMMAND"
 
             end
@@ -402,7 +402,7 @@ function love.keypressed(key)
                 battle.current_state = "COMMANDS"
                 ExecuteCommands()
             else
-                UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
                 battle.current_state = "BATTLEUI"
             end
             selected_enemy = nil
@@ -416,14 +416,14 @@ function love.keypressed(key)
     elseif battle.current_state == "ITEMUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
-            UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
+            battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             battle.ItemManager.tempitem = battle.items[Sole.currentmenuposition]
             print(battle.ItemManager.tempitem.name)
-            UIs[current_party_member]:menuState(Sole, 0, 0, "MEMBERUI", battle.PartyMemberSubArray, battle)
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "MEMBERUI", battle.PartyMemberSubArray, battle)
         elseif key == "left" then
             Sole:updatePos(-1)
         elseif key == "right" then
@@ -433,7 +433,7 @@ function love.keypressed(key)
     elseif battle.current_state == "MEMBERUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:menuState(Sole, 0, 0, "ITEMUI", battle.ItemSubArray, battle)
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "ITEMUI", battle.ItemSubArray, battle)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
@@ -456,7 +456,7 @@ function love.keypressed(key)
                 battle.current_state = "COMMANDS"
                 ExecuteCommands()
             else
-                UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
                 battle.current_state = "BATTLEUI"
             end
 
@@ -471,8 +471,8 @@ function love.keypressed(key)
     elseif battle.current_state == "SPAREUI" then
         if key == "x" then
             love.audio.play(SND_SELECT)
-            UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
-            UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
+            battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+            battle.UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {}, battle)
             battle.party_members[current_party_member]:set_animation(0)
         elseif key == "z" then
             love.audio.play(SND_SELECT)
@@ -500,7 +500,7 @@ function love.keypressed(key)
                 battle.current_state = "COMMANDS"
                 ExecuteCommands()
             else
-                UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
+                battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
                 battle.current_state = "BATTLEUI"
             end
             selected_enemy = nil
@@ -538,7 +538,7 @@ function love.draw()
 
     love.graphics.setPointSize(tlfres.getScale())
 
-    battle.Bg:draw()
+    battle.Bg:draw() --Called outside battle:draw() as it has to be drawn before the primitives
 
     --UI Purple line (top)
     love.graphics.setColor(51/255, 32/255, 51/255)
@@ -558,8 +558,8 @@ function love.draw()
 
     battle:draw()
 
-    for i = 1, #UIs do
-        UIs[i]:draw(battle.current_state, battle.party_members)
+    for i = 1, #battle.UIs do
+        battle.UIs[i]:draw(battle.current_state, battle.party_members)
     end
 
     for i = 1, #battlebars do

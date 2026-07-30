@@ -86,7 +86,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     local Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 308, 630, 1, BattleUISheet, BattleSheetQuadrantData)
     local Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 628, 630, 2, BattleUISheet, BattleSheetQuadrantData)
 
-    UIs = {
+    self.UIs = {
         Kris1UI,
         Kris2UI,
     }
@@ -206,7 +206,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     --Initialise program by setting the first state
     self.current_state = "BATTLEUI"
-    UIs[current_party_member]:subtext("* Cool initial description")
+    self.UIs[current_party_member]:subtext("* Cool initial description")
 
     --These aren't needed after love.load, so they are nullified to save from memory.
 
