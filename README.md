@@ -43,7 +43,7 @@ TODO: Add info about where to modify and how to modify it
 
 ## Disclaimer
 
-**DELTARUNE © Toby Fox 2018-2025. All rights reserved.**
+**DELTARUNE © Toby Fox 2018-2026. All rights reserved.**
 
 This is a non-commercial fan project.
 
