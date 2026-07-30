@@ -10,7 +10,7 @@ Theta Battle Tool
 ### What is Theta Battle Tool
 
 Theta Battle Tool is:
-- A set of libraries which are modified to create your own battle
+- A set of libraries which load and run your own battle
 - A tool designed with modularity in mind
 - Easy to learn (and modify, if you know what you're doing)
 
