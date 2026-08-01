@@ -86,8 +86,6 @@ end
 
 function love.update(dt)
 
-    --TODO: Decouple battle updates to be handled by battle:update()
-
     Controller:update(dt)
 
     for i = 1, #battlebars do
@@ -314,7 +312,7 @@ function love.keypressed(key)
 end
 
 function love.draw()
-    
+
     tlfres.beginRendering(WIDTH, HEIGHT)
 
     love.graphics.setPointSize(tlfres.getScale())
