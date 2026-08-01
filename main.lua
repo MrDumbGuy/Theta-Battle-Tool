@@ -14,7 +14,7 @@ json = require "json"
 local tlfres = require "tlfres"
 require "item"
 require "itemmanager"
-Controller = require "battlecontroller"
+Controller = require "battlecontroller" --The battle middle-manager. Intentionally global.
 
 --Best for blurless scaling
 love.graphics.setDefaultFilter( "nearest", "nearest", 1)
@@ -80,7 +80,7 @@ local Commands = {}
 function love.load()
 
     battle = Encounter()
-    Controller:new(battle)
+    Controller:load(battle)
 
 end
 

@@ -1,11 +1,10 @@
 local Controller = {}
 
-function Controller:new(battle)
+function Controller:load(battle)
     self.battle = battle
-    self.current_state = nil
+    self.current_state = "BATTLEUI"
     self.Commands = {}
     self:resetCommands()
-    self:setState("BATTLEUI")
 end
 
 function Controller:getState() --Return the battle's current state
