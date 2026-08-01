@@ -298,7 +298,7 @@ function love.keypressed(key)
             ExecuteCommands()
         end
 
-    elseif  Controller:getState() == "ATTACKING" and key == "z" then
+    elseif Controller:getState() == "ATTACKING" and key == "z" then
 
         ExecuteAttack(Controller.battle.enemies)
 
