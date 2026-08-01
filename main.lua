@@ -520,7 +520,7 @@ function love.keypressed(key)
 
                 end)
 
-            Controller:addCommand(current_party_membe, 2, "* "..battle.party_members[current_party_member].name.." spared "..selected_enemy.name.."!")
+            Controller:addCommand(current_party_member, 2, "* "..battle.party_members[current_party_member].name.." spared "..selected_enemy.name.."!")
 
             --Go back to the Battle UI or move on to executing every command?
             current_party_member = current_party_member + 1
