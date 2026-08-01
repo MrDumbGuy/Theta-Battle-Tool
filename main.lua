@@ -33,6 +33,13 @@ ARR_STATES = { --UI Buttons to states as used in battle.current_state
     "DEFEND",
 }
 
+--Load fonts!
+--These example font objects are present in every encounter.
+--You could load your own custom fonts for custom functionality
+Battlefont = love.graphics.newFont("fonts/8bitOperatorPlus-Bold.ttf", 30)
+Goldenfont = love.graphics.newImageFont("sprites/goldennumeralfont.png", "0123456789+-%/ ")--The mercy increased font
+HPfont = love.graphics.newFont("fonts/deltarune-hp-font.otf", 14)
+
 --Place state-tracking variables here
 
 selected_enemy = nil

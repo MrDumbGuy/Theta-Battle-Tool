@@ -174,12 +174,6 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     self.ItemManager = ItemManager(self.items, self.ItemSubArray)
 
-    --Load fonts!
-    --These example font objects must be present in every encounter.
-    Battlefont = love.graphics.newFont("fonts/8bitOperatorPlus-Bold.ttf", 30)
-    Goldenfont = love.graphics.newImageFont("sprites/goldennumeralfont.png", "0123456789+-%/ ")--The mercy increased font
-    HPfont = love.graphics.newFont("fonts/deltarune-hp-font.otf", 14)
-
     love.graphics.setFont(Battlefont)
 
     --Load certain feedback sprites (Recruit, Lost, Frozen etc.)
