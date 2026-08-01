@@ -67,7 +67,7 @@ function Controller:update(dt)
 end
 
 function Controller:resetCommands() --Self-explanotory.
-    for i = 1, #self.battle.enemies do
+    for i = 1, #self.battle.party_members do
         self.Commands[i] = {}
     end
 end
