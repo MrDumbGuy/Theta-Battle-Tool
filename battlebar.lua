@@ -11,7 +11,7 @@ function BattleBar:new(rectanglex, y, i,party_members)
     self.attackrectangle = love.graphics.newImage("sprites/battleUI/attackrectangle.png")
 end
 
-function BattleBar:attack(enemies, enemies_to_attack)
+function BattleBar:attack(enemies, enemies_to_attack, members_to_attack)
 
     local mult = math.floor(math.abs(self.rectanglex - (900+100*self.target_member_no) )/100) --multiplier used in ATK calculation
 

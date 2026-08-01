@@ -13,7 +13,7 @@ require "mizzle"
 
 Encounter = Object:extend()
 
-function Encounter:new() --Called once in love.load(). Initialise all your encounter-specific variables and arrays here.
+function Encounter:new(Commands) --Called once in love.load(). Initialise all your encounter-specific variables and arrays here.
 
     self.Box = Battlebox()
 
@@ -68,6 +68,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         kris_2,
     }
 
+    --Yeah, this argument has to be passed from main. A shame.
     for i = 1, #self.party_members do
         Commands[i] = {}
     end
@@ -192,11 +193,6 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.MUS_Battlemusic = self.MUS_Churchbattle
 
     love.audio.play(self.MUS_Battlemusic)
-
-    --Sounds
-    SND_MENUMOVE = love.audio.newSource("sfx/snd_menumove.wav", "static")
-    SND_SELECT = love.audio.newSource("sfx/snd_select.wav", "static")
-    SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 
     --Initialise program by setting the first state
     self.current_state = "BATTLEUI"

@@ -20,12 +20,12 @@ love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 
 --Place constant values here.
 
-WIDTH = 1280
-HEIGHT = 960
+local WIDTH = 1280
+local HEIGHT = 960
 
-ARR_STATES = { --UI Buttons to states as used in battle.current_state
-               --MAGIC will also be used in ACTUI since behavior is similar enough
-               --It still has a graphical difference (magic button over act button) but no functional one.
+local ARR_STATES = {--UI Buttons to states as used in battle.current_state
+                    --MAGIC will also be used in ACTUI since behavior is similar enough
+                    --It still has a graphical difference (magic button over act button) but no functional one.
     "ATTACKUI",
     "ACTUI",
     "ITEMUI",
@@ -33,18 +33,26 @@ ARR_STATES = { --UI Buttons to states as used in battle.current_state
     "DEFEND",
 }
 
---Load fonts!
---These example font objects are present in every encounter.
---You could load your own custom fonts for custom functionality
+--The game's fonts.
+--These need to be global because too many engine components rely on them.
+--They're also present in every Deltarune battle ever
+--If you need your own fonts, feel free to load them in your Encounter() and implement custom fonts for your draw() calls!
 Battlefont = love.graphics.newFont("fonts/8bitOperatorPlus-Bold.ttf", 30)
 Goldenfont = love.graphics.newImageFont("sprites/goldennumeralfont.png", "0123456789+-%/ ")--The mercy increased font
 HPfont = love.graphics.newFont("fonts/deltarune-hp-font.otf", 14)
+
+--Basic sound effects.
+--Again, only global because these are present in every encounter
+--You can load your custom sound effects in your battle!
+SND_MENUMOVE = love.audio.newSource("sfx/snd_menumove.wav", "static")
+SND_SELECT = love.audio.newSource("sfx/snd_select.wav", "static")
+SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 
 --Place state-tracking variables here
 
 selected_enemy = nil
 
-members_to_attack = {}
+local members_to_attack = {}
 local enemies_to_attack = {}
 local battlebars = {}
 
@@ -52,19 +60,22 @@ local actname = {}
 local actindex = {}
 
 --Arrays used for submenus:
-enemies = {}
 local selected_enemies = {}
 
 --The encounter object.
 local battle
 
-Commands = {}
+local Commands = {}
 
---Misc. stuff required for your battle
+--[[
+    Although you can, I'd advise against placing anything battle-specific here.
+    That kind of defeats the point of having made an engine instead of a messily-coded fangame.
+    (Also in the far future there's a chance support is added for an exchangable battle loader)
+]]
 
 function love.load()
 
-    battle = Encounter()
+    battle = Encounter(Commands)
 
 end
 
@@ -182,7 +193,7 @@ local function ExecuteAttack(enemies)
     elseif current_party_member <= #battlebars then
 
         if battlebars[current_party_member] then
-            battlebars[current_party_member]:attack(enemies, enemies_to_attack)
+            battlebars[current_party_member]:attack(enemies, enemies_to_attack, members_to_attack)
         end
 
     end

@@ -13,15 +13,6 @@ function Submenu:new(posarray, targetstatearr, targetenemy, isEnemyList)
     --If targetenmy is nil, the submenu only appears if no enemy is selected
     --Useful for when you select a button from the BattleUi() 
     self.targetenemy = targetenemy
-    
-    if self.targetenemy and enemies then
-        for i = 1, #enemies do
-            if enemies[i] == targetenemy then
-                self.targetenemynumber = i
-                break
-            end
-        end
-    end
 
     self.isEnemyList = isEnemyList
 
