@@ -13,7 +13,7 @@ require "mizzle"
 
 Encounter = Object:extend()
 
-function Encounter:new(Commands) --Called once in love.load(). Initialise all your encounter-specific variables and arrays here.
+function Encounter:new() --Called once in love.load(). Initialise all your encounter-specific variables and arrays here.
 
     self.Box = Battlebox()
 
@@ -67,11 +67,6 @@ function Encounter:new(Commands) --Called once in love.load(). Initialise all yo
         kris_1,
         kris_2,
     }
-
-    --Yeah, this argument has to be passed from main. A shame.
-    for i = 1, #self.party_members do
-        Commands[i] = {}
-    end
 
     --Load BattleUi sheet and data
 
@@ -198,56 +193,4 @@ function Encounter:new(Commands) --Called once in love.load(). Initialise all yo
     self.current_state = "BATTLEUI"
     self.UIs[current_party_member]:subtext("* Cool initial description")
 
-    --These aren't needed after love.load, so they are nullified to save from memory.
-
-end
-
---You can customize drawing and update logic, but this is not recommended for beginners.
---You may opt to keep the same rendering loop. This was only separated from the engine
---In case someone needs wacky visuals (Like Pink's Mad Dummies in the Chaper 5 battle)
-function Encounter:draw()
-
-    for i = 1, #self.party_members do
-        self.party_members[i]:draw()
-    end
-
-    for i = 1,#self.enemies do
-        if self.enemies[i] then
-            self.enemies[i]:draw()
-        end
-    end
-
-    self.Enemysub:draw(self.current_state, self.enemies)
-    for __, sub in pairs(self.Enemysubsubs) do
-        sub:draw(self.current_state, self.enemies)
-    end
-    self.PartyMemberSub:draw(self.current_state, self.enemies)
-    self.ItemSub:draw(self.current_state, self.enemies)
-
-    self.Box:draw()
-
-end
-
-function Encounter:update(dt)
-    for i = 1, #self.enemies do
-        if self.enemies[i] then
-            self.enemies[i]:update(dt, self.current_state, self.enemies)
-        end
-    end
-
-    for i = 1, #self.party_members do
-        self.party_members[i]:update(dt)
-    end
-
-    self.Bg:update(dt)
-
-    Sole:update(dt, self.current_state)
-
-    self.Box:update(dt)
-
-    --print(love.mouse.getX().." , "..love.mouse.getY()) --I use this when checking positions in the UI.
-
-    if not self.MUS_Battlemusic:isPlaying() then
-        love.audio.play(self.MUS_Battlemusic)
-    end
 end

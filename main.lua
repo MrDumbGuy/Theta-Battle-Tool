@@ -14,7 +14,7 @@ json = require "json"
 local tlfres = require "tlfres"
 require "item"
 require "itemmanager"
-
+Controller = require "battlecontroller"
 --Best for blurless scaling
 love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 
@@ -52,6 +52,9 @@ SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 
 selected_enemy = nil
 
+--Just in case I add a menu for changing battles or something.
+local battling = true
+
 local members_to_attack = {}
 local enemies_to_attack = {}
 local battlebars = {}
@@ -75,7 +78,8 @@ local Commands = {}
 
 function love.load()
 
-    battle = Encounter(Commands)
+    battle = Encounter()
+    Controller:new(battle)
 
 end
 
@@ -83,7 +87,7 @@ function love.update(dt)
 
     --TODO: Decouple battle updates to be handled by battle:update()
 
-    battle:update(dt)
+    Controller:update(dt)
 
     for i = 1, #battlebars do
         if battlebars[i] then
@@ -556,7 +560,7 @@ function love.draw()
 
     love.graphics.setPointSize(tlfres.getScale())
 
-    battle.Bg:draw() --Called outside battle:draw() as it has to be drawn before the primitives
+    Controller:drawBackground()
 
     --UI Purple line (top)
     love.graphics.setColor(51/255, 32/255, 51/255)
@@ -574,7 +578,7 @@ function love.draw()
 
     --TODO Decouple draw calls specific to the battle from main by restructuring encounter.lua such that battle has a :draw() function
 
-    battle:draw()
+    Controller:drawForeground()
 
     for i = 1, #battle.UIs do
         battle.UIs[i]:draw(battle.current_state, battle.party_members)
