@@ -116,7 +116,7 @@ function love.update(dt)
 
     if battle.current_state == "BATTLEOVER" then
         for i = 1, #battle.party_members do
-            battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit")
+            battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit.")
         end
         Sole:updatePosArray(nil)
     end
@@ -136,10 +136,7 @@ local function BULLETSCleanup()
         selected_enemies = {}
         actname = {}
         actindex = {}
-        for i = 1, #battle.party_members do
-            Commands[i] = {}
-            battle.UIs[i].buttonmode = 1
-        end
+        Controller:resetCommands()
     collectgarbage("collect")
 
     for i = 1, #battle.party_members do
@@ -225,9 +222,9 @@ local function ExecuteCommands()
     print("current_party_member @ COMMANDS: "..current_party_member)
 
     if current_party_member <= #battle.party_members then
-        if Commands[current_party_member][1] then --TODO Ensure that the Command for a downed partyMember is empty.
-            battle.UIs[current_party_member]:subtext(Commands[current_party_member][2])
-            CommandReturned = Commands[current_party_member][1]()
+        if Controller:getCommand(current_party_member, 1) then --TODO Ensure that the Command for a downed partyMember is empty.
+            battle.UIs[current_party_member]:subtext(Controller:getCommand(current_party_member,2))
+            CommandReturned = Controller:runCommand(current_party_member, 1)
             if CommandReturned then print("Command executed: "..CommandReturned.." by: "..battle.party_members[current_party_member].name) end
         end
     end
@@ -292,8 +289,8 @@ function love.keypressed(key)
                 battle.ItemManager:undoAddition()
             end
             battle.current_state = "BATTLEUI"
-            Commands[current_party_member][1] = nil
-            Commands[current_party_member][2] = nil
+            Controller:addCommand(current_party_member, 1, nil)
+            Controller:addCommand(current_party_member, 2, nil)
             current_party_member = current_party_member - 1
         elseif key == "z" then
             battle.UIs[current_party_member]:subtext(nil)
@@ -318,13 +315,15 @@ function love.keypressed(key)
             if ARR_STATES[battle.UIs[current_party_member].buttonmode] == "DEFEND" then
 
                 --No extra commands neeed for the party member to defend
-                Commands[current_party_member][1] = function ()
+                Controller:addCommand(current_party_member, 1,
 
-                    return "DEFCOMMAND"
+                    function ()
 
-                end
+                        return "DEFCOMMAND"
 
-                Commands[current_party_member][2] = battle.party_members[current_party_member].name.." defended!" --Not displayed, necessary for regular flow of program.
+                    end)
+
+                Controller:addCommand(current_party_member, 2, battle.party_members[current_party_member].name.." defended!") --Not displayed, necessary for regular flow of program.
 
                 --Advance to next opponent or move on to executing every command?
                 current_party_member = current_party_member + 1
@@ -353,11 +352,13 @@ function love.keypressed(key)
             selected_enemies[current_party_member] = battle.enemies[Sole.currentmenuposition]
 
             enemies_to_attack[#enemies_to_attack+1] = selected_enemy
-            Commands[current_party_member][1] = function ()
-                return "ATTACKCOMMAND"
-            end
+            Controller:addCommand(current_party_member, 1,
 
-            Commands[current_party_member][2] = "* "..battle.party_members[current_party_member].name.." attacked "..selected_enemy.name.."!" --Not displayed, necessary for regular flow of program.
+            function ()
+                return "ATTACKCOMMAND"
+            end)
+
+            Controller:addCommand(current_party_member, 2, "* "..battle.party_members[current_party_member].name.." attacked "..selected_enemy.name.."!") --Not displayed, necessary for regular flow of program.
 
             --Go back to the Battle UI or move on to executing every command?
             current_party_member = current_party_member + 1
@@ -408,14 +409,16 @@ function love.keypressed(key)
             love.audio.play(SND_SELECT)
             print(selected_enemies[current_party_member].name.." added to queue to be acted with.")
 
-            Commands[current_party_member][1] = function()
+            Controller:addCommand(current_party_member, 1,
+
+            function()
 
                 if battle.current_state == "COMMANDS" then battle.party_members[current_party_member]:act(selected_enemies[current_party_member], actname[current_party_member], battle.UIs[current_party_member]) end
                 return "ACTCOMMAND"
 
-            end
+            end)
 
-            Commands[current_party_member][2] = battle.act_sub_subs[selected_enemies[current_party_member]][actindex[current_party_member]][4](battle.party_members)
+            Controller:addCommand(current_party_member, 2, battle.act_sub_subs[selected_enemies[current_party_member]][actindex[current_party_member]][4](battle.party_members))
 
             --Go back to the Battle UI or move on to executing every command?
             current_party_member = current_party_member + 1
@@ -464,14 +467,16 @@ function love.keypressed(key)
             local itemtext = battle.ItemManager:generateItemText(Sole.currentmenuposition, current_party_member, battle.party_members)
             battle.ItemManager:addItem(Sole.currentmenuposition, current_party_member)
 
-            Commands[current_party_member][1] = function()
+            Controller:addCommand(current_party_member, 1,
 
-                if battle.current_state == "COMMANDS" then battle.ItemManager:useItem(battle) end
-                return "ITEMCOMMAND" --Functionally the same as an ACTCOMMAND, but labelled seperately for debugging purposes and code cleanliness.
+                function()
 
-            end
+                    if battle.current_state == "COMMANDS" then battle.ItemManager:useItem(battle) end
+                    return "ITEMCOMMAND" --Functionally the same as an ACTCOMMAND, but labelled seperately for debugging purposes and code cleanliness.
 
-            Commands[current_party_member][2] = itemtext
+                end)
+
+            Controller:addCommand(current_party_member, 2, itemtext)
             current_party_member = current_party_member + 1
             if current_party_member > #battle.party_members then
                 current_party_member = 0
@@ -502,18 +507,20 @@ function love.keypressed(key)
             selected_enemies[current_party_member] = battle.enemies[Sole.currentmenuposition]
             print(selected_enemies[current_party_member].name.." added to queue to be spared.")
 
-            Commands[current_party_member][1] = function()
+            Controller:addCommand(current_party_member, 1,
 
-                if battle.current_state == "COMMANDS" then
-                    battle.party_members[current_party_member]:spare(selected_enemies[current_party_member])
-                    battle.party_members[current_party_member]:set_animation(4)
-                end
+                function()
 
-                return "SPARECOMMAND"
+                    if battle.current_state == "COMMANDS" then
+                        battle.party_members[current_party_member]:spare(selected_enemies[current_party_member])
+                        battle.party_members[current_party_member]:set_animation(4)
+                    end
 
-            end
+                    return "SPARECOMMAND"
 
-            Commands[current_party_member][2] = "* "..battle.party_members[current_party_member].name.." spared "..selected_enemy.name.."!"
+                end)
+
+            Controller:addCommand(current_party_membe, 2, "* "..battle.party_members[current_party_member].name.." spared "..selected_enemy.name.."!")
 
             --Go back to the Battle UI or move on to executing every command?
             current_party_member = current_party_member + 1

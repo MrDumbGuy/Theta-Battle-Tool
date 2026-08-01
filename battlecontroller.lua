@@ -3,10 +3,8 @@ local Controller = Object:extend()
 function Controller:new(battle)
     self.battle = battle
     self.current_state = nil
-    self.commands = {}
-    for i = 1, #self.battle.enemies do
-        self.commands[i] = {}
-    end
+    self.Commands = {}
+    self:resetCommands()
 end
 
 function Controller:getState()
@@ -68,8 +66,22 @@ function Controller:update(dt)
     end
 end
 
-function Controller:runQueue(partymemberindex, n)
-    return self.commands[partymemberindex][n]()
+function Controller:resetCommands()
+    for i = 1, #self.battle.enemies do
+        self.Commands[i] = {}
+    end
+end
+
+function Controller:addCommand(partymemberindex, n, misc)--TODO Rename to Controller:setCommand()
+    self.Commands[partymemberindex][n] = misc
+end
+
+function Controller:runCommand(partymemberindex, n)
+    return self.Commands[partymemberindex][n]()
+end
+
+function Controller:getCommand(partymemberindex, n)
+    return self.Commands[partymemberindex][n]
 end
 
 return Controller
