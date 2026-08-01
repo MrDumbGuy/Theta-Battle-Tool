@@ -40,8 +40,8 @@ function BattleUi:changeselect(delta)
     end
 end
 
-function BattleUi:menuState(soul, x, y, currstate, posarray, battle)
-    battle.current_state = currstate
+function BattleUi:menuState(soul, x, y, currstate, posarray)
+    Controller:setState(currstate)
     if posarray then
         soul:updatePosArray(posarray)
     else

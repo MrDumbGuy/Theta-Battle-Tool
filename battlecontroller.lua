@@ -5,13 +5,14 @@ function Controller:new(battle)
     self.current_state = nil
     self.Commands = {}
     self:resetCommands()
+    self:setState("BATTLEUI")
 end
 
-function Controller:getState()
+function Controller:getState() --Return the battle's current state
     return self.current_state
 end
 
-function Controller:setState(state)
+function Controller:setState(state) --Set the battle's current state
     self.current_state = state
 end
 
@@ -31,12 +32,12 @@ function Controller:drawForeground()
         end
     end
 
-    self.battle.Enemysub:draw(self.battle.current_state, self.battle.enemies)
+    self.battle.Enemysub:draw(self:getState(), self.battle.enemies)
     for __, sub in pairs(self.battle.Enemysubsubs) do
-        sub:draw(self.battle.current_state, self.battle.enemies)
+        sub:draw(self:getState(), self.battle.enemies)
     end
-    self.battle.PartyMemberSub:draw(self.battle.current_state, self.battle.enemies)
-    self.battle.ItemSub:draw(self.battle.current_state, self.battle.enemies)
+    self.battle.PartyMemberSub:draw(self:getState(), self.battle.enemies)
+    self.battle.ItemSub:draw(self:getState(), self.battle.enemies)
 
     self.battle.Box:draw()
 
@@ -45,7 +46,7 @@ end
 function Controller:update(dt)
         for i = 1, #self.battle.enemies do
         if self.battle.enemies[i] then
-            self.battle.enemies[i]:update(dt, self.current_state, self.battle.enemies)
+            self.battle.enemies[i]:update(dt, self:getState(), self.battle.enemies)
         end
     end
 
@@ -55,7 +56,7 @@ function Controller:update(dt)
 
     self.battle.Bg:update(dt)
 
-    Sole:update(dt, self.battle.current_state)
+    Sole:update(dt, self:getState())
 
     self.battle.Box:update(dt)
 
@@ -66,21 +67,21 @@ function Controller:update(dt)
     end
 end
 
-function Controller:resetCommands()
+function Controller:resetCommands() --Self-explanotory.
     for i = 1, #self.battle.enemies do
         self.Commands[i] = {}
     end
 end
 
-function Controller:setCommand(partymemberindex, n, misc)--TODO Rename to Controller:setCommand()
+function Controller:setCommand(partymemberindex, n, misc)
     self.Commands[partymemberindex][n] = misc
 end
 
-function Controller:runCommand(partymemberindex, n)
+function Controller:runCommand(partymemberindex, n) --For ExecuteCommands()!
     return self.Commands[partymemberindex][n]()
 end
 
-function Controller:getCommand(partymemberindex, n)
+function Controller:getCommand(partymemberindex, n) --Check the command type or get the UI subtext
     return self.Commands[partymemberindex][n]
 end
 
