@@ -314,6 +314,7 @@ function love.keypressed(key)
 end
 
 function love.draw()
+    
     tlfres.beginRendering(WIDTH, HEIGHT)
 
     love.graphics.setPointSize(tlfres.getScale())
@@ -333,8 +334,6 @@ function love.draw()
     love.graphics.rectangle("fill", 0, 733, 1280, 4)
 
     love.graphics.setColor(1,1,1,1) --If you don't set to white when drawing images, the image colors get altered.
-
-    --TODO Decouple draw calls specific to the battle from main by restructuring encounter.lua such that battle has a :draw() function
 
     Controller:drawForeground()
 
