@@ -1,4 +1,4 @@
-local Controller = Object:extend()
+local Controller = {}
 
 function Controller:new(battle)
     self.battle = battle
@@ -72,7 +72,7 @@ function Controller:resetCommands()
     end
 end
 
-function Controller:addCommand(partymemberindex, n, misc)--TODO Rename to Controller:setCommand()
+function Controller:setCommand(partymemberindex, n, misc)--TODO Rename to Controller:setCommand()
     self.Commands[partymemberindex][n] = misc
 end
 
