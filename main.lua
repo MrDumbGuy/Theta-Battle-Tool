@@ -54,22 +54,21 @@ SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 selected_enemy = nil
 
 --Just in case I add a menu for changing battles or something.
-local battling = true
+local battling
 
-local members_to_attack = {}
-local enemies_to_attack = {}
-local battlebars = {}
+--TODO Move most of these to the Controller object. The Controller is meant to be the middle-manager for the battle, so it should handle most of these variables.
+local members_to_attack
+local enemies_to_attack
+local battlebars
 
-local actname = {}
-local actindex = {}
+local actname
+local actindex
 
 --Arrays used for submenus:
-local selected_enemies = {}
+local selected_enemies
 
 --The encounter object.
 local battle
-
-local Commands = {}
 
 --[[
     Although you can, I'd advise against placing anything battle-specific here.
@@ -79,45 +78,62 @@ local Commands = {}
 
 function love.load()
 
+    battling = false
+
+end
+
+local function startBattle()
+
+    members_to_attack = {}
+    enemies_to_attack = {}
+    battlebars = {}
+    actindex = {}
+    actindex = {}
+    selected_enemies = {}
+
+
     battle = Encounter()
     Controller:load(battle)
+    battling = true
 
 end
 
 function love.update(dt)
 
-    Controller:update(dt)
+    if battling then
+        Controller:update(dt)
 
-    for i = 1, #battlebars do
-        if battlebars[i] then
-            battlebars[i]:update(dt)
-        end
-    end
-
-    tick.update(dt)
-
-    flux.update(dt)
-
-    local battleovercheck = true
-
-    for i = 1, #Controller.battle.enemies do
-        if Controller.battle.enemies[i] then
-            if Controller.battle.enemies[i].hp > 0 then
-                battleovercheck = false
-                break
+        for i = 1, #battlebars do
+            if battlebars[i] then
+                battlebars[i]:update(dt)
             end
         end
-    end
 
-    if battleovercheck then
-        Controller:setState("BATTLEOVER")
-    end
+        tick.update(dt)
 
-    if Controller:getState() == "BATTLEOVER" then
-        for i = 1, #Controller.battle.party_members do
-            Controller.battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit.")
+        flux.update(dt)
+
+        local battleovercheck = true
+
+        for i = 1, #Controller.battle.enemies do
+            if Controller.battle.enemies[i] then
+                if Controller.battle.enemies[i].hp > 0 then
+                    battleovercheck = false
+                    break
+                end
+            end
         end
-        Sole:updatePosArray(nil)
+
+        if battleovercheck then
+            Controller:setState("BATTLEOVER")
+        end
+
+        if Controller:getState() == "BATTLEOVER" then
+            for i = 1, #Controller.battle.party_members do
+                Controller.battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit.")
+            end
+            Sole:updatePosArray(nil)
+        end
     end
 
 end
@@ -274,80 +290,99 @@ end
 
 function love.keypressed(key)
 
-    print("Controller's state = "..Controller:getState())
+    if battling then
 
-    if Controller:getState() == "COMMANDS" then
+        print("Controller's state = "..Controller:getState())
 
-        if Controller:getPartyMember() <= #Controller.battle.party_members then
-            ExecuteCommands()
+        if Controller:getState() == "COMMANDS" then
+
+            if Controller:getPartyMember() <= #Controller.battle.party_members then
+                ExecuteCommands()
+            end
+
+        elseif Controller:getState() == "ATTACKING" and key == "z" then
+
+            ExecuteAttack(Controller.battle.enemies)
+
+        elseif Controller:getState() == "BATTLEOVER" then
+            love.event.quit()
         end
 
-    elseif Controller:getState() == "ATTACKING" and key == "z" then
+        if Controller:getState() ~= "BULLETS" then
+            print("Current State: "..Controller:getState())
+            print("Party Member:"..Controller:getPartyMember())
+        end
 
-        ExecuteAttack(Controller.battle.enemies)
+        --This has to run after  the above to prevent misfires.
 
-    elseif Controller:getState() == "BATTLEOVER" then
-        love.event.quit()
+        selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_attack, actname, actindex)
+
+        --Go back to the Battle UI or move on to executing every command?
+        if Controller.doneNavigating and Controller:getPartyMember() > #Controller.battle.party_members then
+            Controller:setPartyMember(0)
+            Controller:setState("COMMANDS")
+            ExecuteCommands()
+            Sole:updatePosArray(nil)
+        elseif Controller.doneNavigating and Controller:getState() ~= "BULLETS" and Controller:getState() ~= "COMMANDS" and Controller:getState() ~= "ATTACKING" then
+            Controller.battle.UIs[Controller:getPartyMember()]:subtext("* A wild battle commentary appeared!")
+            Controller.battle.UIs[Controller:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
+            Controller:setState("BATTLEUI")
+            Controller.doneNavigating = false
+            selected_enemy = nil
+        end
+    else
+
+        if key == "z" then
+            startBattle()
+    
+        end
+
     end
-
-    if Controller:getState() ~= "BULLETS" then
-        print("Current State: "..Controller:getState())
-        print("Party Member:"..Controller:getPartyMember())
-    end
-
-    --This has to run after  the above to prevent misfires.
-
-    selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_attack, actname, actindex)
-
-    --Go back to the Battle UI or move on to executing every command?
-    if Controller.doneNavigating and Controller:getPartyMember() > #Controller.battle.party_members then
-        Controller:setPartyMember(0)
-        Controller:setState("COMMANDS")
-        ExecuteCommands()
-        Sole:updatePosArray(nil)
-    elseif Controller.doneNavigating and Controller:getState() ~= "BULLETS" and Controller:getState() ~= "COMMANDS" and Controller:getState() ~= "ATTACKING" then
-        Controller.battle.UIs[Controller:getPartyMember()]:subtext("* A wild battle commentary appeared!")
-        Controller.battle.UIs[Controller:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
-        Controller:setState("BATTLEUI")
-        Controller.doneNavigating = false
-        selected_enemy = nil
-    end
-
 end
 
 function love.draw()
 
     tlfres.beginRendering(WIDTH, HEIGHT)
 
-    love.graphics.setPointSize(tlfres.getScale())
+    if battling then
 
-    Controller:drawBackground()
+        love.graphics.setPointSize(tlfres.getScale())
 
-    --UI Purple line (top)
-    love.graphics.setColor(51/255, 32/255, 51/255)
-    love.graphics.rectangle("fill", 0, 684, 1280, 4)
+        Controller:drawBackground()
 
-    --UI Background (black)
-    love.graphics.setColor(0,0,0,1)
-    love.graphics.rectangle("fill",0,687,1280,273)
+        --UI Purple line (top)
+        love.graphics.setColor(51/255, 32/255, 51/255)
+        love.graphics.rectangle("fill", 0, 684, 1280, 4)
 
-    --UI Purple line (bottom)
-    love.graphics.setColor(51/255, 32/255, 51/255)
-    love.graphics.rectangle("fill", 0, 733, 1280, 4)
+        --UI Background (black)
+        love.graphics.setColor(0,0,0,1)
+        love.graphics.rectangle("fill",0,687,1280,273)
 
-    love.graphics.setColor(1,1,1,1) --If you don't set to white when drawing images, the image colors get altered.
+        --UI Purple line (bottom)
+        love.graphics.setColor(51/255, 32/255, 51/255)
+        love.graphics.rectangle("fill", 0, 733, 1280, 4)
 
-    Controller:drawForeground()
+        love.graphics.setColor(1,1,1,1) --If you don't set to white when drawing images, the image colors get altered.
 
-    for i = 1, #Controller.battle.UIs do
-        Controller.battle.UIs[i]:draw(Controller:getState(), Controller.battle.party_members)
+        Controller:drawForeground()
+
+        for i = 1, #Controller.battle.UIs do
+            Controller.battle.UIs[i]:draw(Controller:getState(), Controller.battle.party_members)
+        end
+
+        for i = 1, #battlebars do
+            battlebars[i]:draw()
+        end
+
+        Sole:draw(Controller:getState())
+
+    else
+
+        love.graphics.setColor(1,1,1,1)
+        love.graphics.setFont(Battlefont)
+        love.graphics.print("Press Z to start the battle!", WIDTH/3-50, HEIGHT/2, 0)
+
     end
-
-    for i = 1, #battlebars do
-        battlebars[i]:draw()
-    end
-
-    Sole:draw(Controller:getState())
 
     local FPS = love.timer.getFPS()
 
