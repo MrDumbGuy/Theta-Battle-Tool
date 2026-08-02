@@ -24,7 +24,7 @@ love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 local WIDTH = 1280
 local HEIGHT = 960
 
-local ARR_STATES = {--UI Buttons to states as used in Controller.battle.current_state
+local ARR_STATES = {--UI Buttons to states as used in Controller.current_state
                     --MAGIC will also be used in ACTUI since behavior is similar enough
                     --It still has a graphical difference (magic button over act button) but no functional one.
     "ATTACKUI",
@@ -129,7 +129,7 @@ local function BULLETSCleanup()
     Sole:updateLimits(Controller.battle.Box)
 
     --Collect garbage and reset to first party member.
-    current_party_member = 1
+    Controller:setPartyMember(1)
     selected_enemies = {}
     actname = {}
     actindex = {}
@@ -151,7 +151,7 @@ local function StartBULLETS()
         battlebars = {}
         collectgarbage("collect")
 
-        current_party_member = 1
+        Controller:setPartyMember(1)
         for i = 1, #Controller.battle.party_members do
             Controller.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
         end
@@ -165,7 +165,7 @@ end
 local function ExecuteAttack(enemies)
 
     print("ExecuteAttack()")
-    print("current_party_member: "..current_party_member)
+    print("Controller:getPartyMember(): "..Controller:getPartyMember())
 
     Controller:setState("ATTACKING")
 
@@ -188,15 +188,15 @@ local function ExecuteAttack(enemies)
 
         end
 
-    elseif current_party_member <= #battlebars then
+    elseif Controller:getPartyMember() <= #battlebars then
 
-        if battlebars[current_party_member] then
-            battlebars[current_party_member]:attack(enemies, enemies_to_attack, members_to_attack)
+        if battlebars[Controller:getPartyMember()] then
+            battlebars[Controller:getPartyMember()]:attack(enemies, enemies_to_attack, members_to_attack)
         end
 
     end
 
-    if current_party_member > #battlebars then
+    if Controller:getPartyMember() > #battlebars then
 
         Controller.doneNavigating = true
 
@@ -216,27 +216,27 @@ local function ExecuteCommands()
     print("ExecuteCommands()")
 
     local CommandReturned
-    current_party_member = current_party_member + 1
+    Controller:setPartyMember(Controller:getPartyMember() + 1)
 
-    print("current_party_member @ COMMANDS: "..current_party_member)
+    print("Controller:getPartyMember() @ COMMANDS: "..Controller:getPartyMember())
 
-    if current_party_member <= #Controller.battle.party_members then
-        if Controller:getCommand(current_party_member, 1) then --TODO Ensure that the Command for a downed partyMember is empty.
-            Controller.battle.UIs[current_party_member]:subtext(Controller:getCommand(current_party_member,2))
-            CommandReturned = Controller:runCommand(current_party_member, 1)
-            if CommandReturned then print("Command executed: "..CommandReturned.." by: "..Controller.battle.party_members[current_party_member].name) end
+    if Controller:getPartyMember() <= #Controller.battle.party_members then
+        if Controller:getCommand(Controller:getPartyMember(), 1) then --TODO Ensure that the Command for a downed partyMember is empty.
+            Controller.battle.UIs[Controller:getPartyMember()]:subtext(Controller:getCommand(Controller:getPartyMember(),2))
+            CommandReturned = Controller:runCommand(Controller:getPartyMember(), 1)
+            if CommandReturned then print("Command executed: "..CommandReturned.." by: "..Controller.battle.party_members[Controller:getPartyMember()].name) end
         end
     end
     if CommandReturned == "DEFCOMMAND" then
-        Controller.battle.party_members[current_party_member].isdefending = true
+        Controller.battle.party_members[Controller:getPartyMember()].isdefending = true
         ExecuteCommands()
     elseif CommandReturned == "ATTACKCOMMAND" then
-        members_to_attack[#members_to_attack+1] = Controller.battle.party_members[current_party_member]
+        members_to_attack[#members_to_attack+1] = Controller.battle.party_members[Controller:getPartyMember()]
         print("Latest member to attack: "..members_to_attack[#members_to_attack].name)
         ExecuteCommands()
     end
 
-    if current_party_member >= #Controller.battle.party_members + 1 then
+    if Controller:getPartyMember() >= #Controller.battle.party_members + 1 then
 
         Controller:resetCommands()
 
@@ -246,7 +246,7 @@ local function ExecuteCommands()
 
         if #members_to_attack > 0 then
 
-            current_party_member = 1
+            Controller:setPartyMember(1)
 
             for i = 1, #Controller.battle.party_members do
                 Controller.battle.UIs[i]:subtext("")
@@ -277,14 +277,14 @@ function love.keypressed(key)
     selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_attack, actname, actindex)
 
     --Go back to the Battle UI or move on to executing every command?
-    if current_party_member > #Controller.battle.party_members then
-        current_party_member = 0
+    if Controller:getPartyMember() > #Controller.battle.party_members then
+        Controller:setPartyMember(0)
         Controller:setState("COMMANDS")
         ExecuteCommands()
         Sole:updatePosArray(nil)
     elseif Controller.doneNavigating and Controller:getState() ~= "BULLETS" and Controller:getState() ~= "COMMANDS" and Controller:getState() ~= "ATTACKING" then
-        Controller.battle.UIs[current_party_member]:subtext("* A wild battle commentary appeared!")
-        Controller.battle.UIs[current_party_member]:menuState(Sole, 0, 0, "BATTLEUI", {})
+        Controller.battle.UIs[Controller:getPartyMember()]:subtext("* A wild battle commentary appeared!")
+        Controller.battle.UIs[Controller:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
         Controller:setState("BATTLEUI")
         Controller.doneNavigating = false
         selected_enemy = nil
@@ -292,7 +292,7 @@ function love.keypressed(key)
 
     if Controller:getState() == "COMMANDS" then
 
-        if current_party_member <= #Controller.battle.party_members then
+        if Controller:getPartyMember() <= #Controller.battle.party_members then
             ExecuteCommands()
         end
 
@@ -306,7 +306,7 @@ function love.keypressed(key)
 
     if Controller:getState() ~= "BULLETS" then
         print("Current State: "..Controller:getState())
-        print("Party Member:"..current_party_member)
+        print("Party Member:"..Controller:getPartyMember())
     end
 
 end

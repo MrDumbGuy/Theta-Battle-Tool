@@ -55,7 +55,7 @@ function BattleUi:subtext(subtext)
 end
 
 function BattleUi:draw(localcurrentstate, members)
-    if localcurrentstate == "BATTLEUI" and current_party_member == self.targetpartymember then
+    if localcurrentstate == "BATTLEUI" and Controller:getPartyMember() == self.targetpartymember then
         love.graphics.draw(self.sheetimage, self.backgroundquad, self.x, self.y, 0, 1.5, 1.5)
         love.graphics.draw(self.sheetimage, self.buttonquads[self.buttonmode], self.x, self.y, 0, 1.5, 1.5)
         love.graphics.setFont(HPfont)
@@ -67,7 +67,7 @@ function BattleUi:draw(localcurrentstate, members)
         love.graphics.print(members[self.targetpartymember].hp, self.x+205, self.y+64, 0, 1, 1)
         love.graphics.print(members[self.targetpartymember].maxhp, self.x+265, self.y+64, 0, 1, 1)
     end
-    if self.subtextstr and current_party_member == self.targetpartymember then
+    if self.subtextstr and Controller:getPartyMember() == self.targetpartymember then
         love.graphics.setColor(1,1,1,1)
         love.graphics.setFont(Battlefont)
         love.graphics.print(self.subtextstr, 218, 771, 0, 1, 1)

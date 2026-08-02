@@ -87,7 +87,6 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         Kris2UI,
     }
 
-    current_party_member = 1
 
     --Background
     self.Bg = Background("b")
@@ -130,15 +129,15 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.act_sub_subs = { --ACT -> enemies[i] (in your original array) -> These show up
         [self.enemies[1]] = { --Handle these in enemies[1]:act(actname)
             [1] = {"* Alarm", 218, 771, function () return "* Mizzr is awoken!\n* This sounds like a bad idea." end},
-            [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[current_party_member].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
+            [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[Controller:getPartyMember()].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
         },
         [self.enemies[2]] = {
             [1] = {"* Alarm", 218, 771, function () return "* Mizzy is awoken!\n* This sounds like a bad idea." end},
-            [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[current_party_member].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
+            [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[Controller:getPartyMember()].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
         },
         [self.enemies[3]] = {
             [1] = {"* Alarm", 218, 771, function () return "* Mizzle is awoken!\n* This sounds like a bad idea." end},
-            [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[current_party_member].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
+            [2] = {"* Lullaby", 778, 771, function (party_members) return"* "..party_members[Controller:getPartyMember()].name.." sung a lullaby!\n* Not as good as Ralsei's, but it worked." end},
         },
     }
 
@@ -191,6 +190,6 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     --Initialise program by setting the first state
     self.current_state = "BATTLEUI"
-    self.UIs[current_party_member]:subtext("* Cool initial description")
+    self.UIs[1]:subtext("* Cool initial description")
 
 end

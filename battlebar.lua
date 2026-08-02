@@ -21,7 +21,7 @@ function BattleBar:attack(enemies, enemies_to_attack, members_to_attack)
         self.used = true
         members_to_attack[self.target_member_no]:attack(enemies_to_attack[self.target_member_no], mult, enemies)
         self.enemies = nil
-        current_party_member = current_party_member + 1
+        Controller:setPartyMember(Controller:getPartyMember() + 1)
     end
 end
 
