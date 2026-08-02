@@ -8,7 +8,7 @@ function Controller:load()
     self.Commands = {}
     self.doneNavigating = false
     self.current_party_member = 1
-    self:resetCommands()
+    self:BULLETSCleanup()
 end
 
 function Controller:getState() --Return the battle's current state
@@ -82,10 +82,10 @@ function Controller:BULLETSCleanup() --Self-explanotory.
     for i = 1, #self.battle.party_members do
         self.Commands[i] = {}
     end
-    for i = 1, #Controller.battle.party_members do
-        Controller.battle.party_members[i].isdefending = false
-        if Controller.battle.party_members[i].hp > 0 then Controller.battle.party_members[i]:set_animation(0) end
-        Controller.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
+    for i = 1, #self.battle.party_members do
+        self.battle.party_members[i].isdefending = false
+        if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation(0) end
+        self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
     end
 end
 
