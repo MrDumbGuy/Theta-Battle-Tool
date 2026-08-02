@@ -138,7 +138,6 @@ end
 
 local function BULLETSCleanup()
 
-    Controller:setState("BATTLEUI")
     Controller.battle.Box:set_animation(3)
     Sole:updateLimits(Controller.battle.Box)
 

@@ -82,10 +82,13 @@ function Controller:BULLETSCleanup() --Self-explanotory.
     for i = 1, #self.battle.party_members do
         self.Commands[i] = {}
     end
-    for i = 1, #self.battle.party_members do
-        self.battle.party_members[i].isdefending = false
-        if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation(0) end
-        self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
+    if self:getState() == "BULLETS" then
+        for i = 1, #self.battle.party_members do
+            self.battle.party_members[i].isdefending = false
+            if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation(0) end
+            self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
+        end
+        self:setState("BATTLEUI")
     end
 end
 
@@ -123,6 +126,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
             self:setCommand(self:getPartyMember(), 2, nil)
             self.battle.UIs[self:getPartyMember() - 1]:subtext("* A wild battle commentary appeared!")
             self.battle.UIs[self:getPartyMember() - 1]:menuState(Sole, 0, 0, "BATTLEUI", {})
+            self.battle.party_members[self:getPartyMember() - 1]:set_animation(0)
             love.audio.play(SND_SELECT)
             self:setPartyMember(self:getPartyMember() - 1)
         elseif key == "z" then
