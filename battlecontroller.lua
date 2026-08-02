@@ -117,7 +117,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
             self.battle.UIs[self:getPartyMember() - 1]:subtext("* A wild battle commentary appeared!")
             self.battle.UIs[self:getPartyMember() - 1]:menuState(Sole, 0, 0, "BATTLEUI", {})
             love.audio.play(SND_SELECT)
-            Controller:setPartyMember(Controller:getPartyMember() - 1)
+            self:setPartyMember(self:getPartyMember() - 1)
         elseif key == "z" then
             self.battle.UIs[self:getPartyMember()]:subtext(nil)
             love.audio.play(SND_SELECT)
@@ -148,7 +148,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
 
                 self:setCommand(self:getPartyMember(), 2, self.battle.party_members[self:getPartyMember()].name.." defended!") --Not displayed, necessary for regular flow of program.
                 self.doneNavigating = true
-                Controller:setPartyMember(Controller:getPartyMember() + 1)
+                self:setPartyMember(self:getPartyMember() + 1)
             end
 
         end
@@ -174,7 +174,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
 
             self:setCommand(self:getPartyMember(), 2, "* "..self.battle.party_members[self:getPartyMember()].name.." attacked "..selected_enemy.name.."!") --Not displayed, necessary for regular flow of program.
             self.doneNavigating = true
-            Controller:setPartyMember(Controller:getPartyMember() + 1)
+            self:setPartyMember(self:getPartyMember() + 1)
 
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -224,7 +224,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
 
             self:setCommand(self:getPartyMember(), 2, self.battle.act_sub_subs[selected_enemies[self:getPartyMember()]][actindex[self:getPartyMember()]][4](self.battle.party_members))
             self.doneNavigating = true
-            Controller:setPartyMember(Controller:getPartyMember() + 1)
+            self:setPartyMember(self:getPartyMember() + 1)
 
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -271,7 +271,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
 
             self:setCommand(self:getPartyMember(), 2, itemtext)
             self.doneNavigating = true
-            Controller:setPartyMember(Controller:getPartyMember() + 1)
+            self:setPartyMember(self:getPartyMember() + 1)
 
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -306,7 +306,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
 
             self:setCommand(self:getPartyMember(), 2, "* "..self.battle.party_members[self:getPartyMember()].name.." spared "..selected_enemy.name.."!")
             self.doneNavigating = true
-            Controller:setPartyMember(Controller:getPartyMember() + 1)
+            self:setPartyMember(self:getPartyMember() + 1)
 
         elseif key == "left" then
             Sole:updatePos(-1)
