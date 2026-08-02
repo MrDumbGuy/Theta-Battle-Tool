@@ -248,7 +248,7 @@ local function ExecuteCommands()
 
     if Controller:getPartyMember() >= #Controller.battle.party_members + 1 then
 
-        Controller:resetCommands()
+        Controller:BULLETSCleanup()
 
         for i = 1, #Controller.battle.party_members do
             Controller.battle.party_members[i].hpup = nil
