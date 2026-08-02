@@ -78,9 +78,14 @@ function Controller:update(dt)
     end
 end
 
-function Controller:resetCommands() --Self-explanotory.
+function Controller:BULLETSCleanup() --Self-explanotory.
     for i = 1, #self.battle.party_members do
         self.Commands[i] = {}
+    end
+    for i = 1, #Controller.battle.party_members do
+        Controller.battle.party_members[i].isdefending = false
+        if Controller.battle.party_members[i].hp > 0 then Controller.battle.party_members[i]:set_animation(0) end
+        Controller.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
     end
 end
 
@@ -210,6 +215,7 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
             self.battle.party_members[self:getPartyMember()]:set_animation(0)
 
         elseif key == "z" then
+            if not actname then actname = {} end
             actname[self:getPartyMember()] = Sole.positions[Sole.currentmenuposition][1]
             actindex[self:getPartyMember()] = Sole.currentmenuposition
             love.audio.play(SND_SELECT)

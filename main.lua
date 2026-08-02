@@ -147,14 +147,8 @@ local function BULLETSCleanup()
     selected_enemies = {}
     actname = {}
     actindex = {}
-    Controller:resetCommands()
+    Controller:BULLETSCleanup()
     collectgarbage("collect")
-
-    for i = 1, #Controller.battle.party_members do
-        Controller.battle.party_members[i].isdefending = false
-        if Controller.battle.party_members[i].hp > 0 then Controller.battle.party_members[i]:set_animation(0) end
-        Controller.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
-    end
 
 end
 
@@ -167,7 +161,7 @@ local function StartBULLETS()
 
         Controller:setPartyMember(1)
         for i = 1, #Controller.battle.party_members do
-            Controller.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
+            Controller.battle.UIs[i]:subtext("")
         end
         Controller.battle.Box:set_animation(1)
         Sole:updateLimits(Controller.battle.Box)
