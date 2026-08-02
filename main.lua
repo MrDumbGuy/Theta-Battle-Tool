@@ -68,7 +68,6 @@ local actindex
 local selected_enemies
 
 --The encounter object.
-local battle
 
 --[[
     Although you can, I'd advise against placing anything battle-specific here.
@@ -91,9 +90,7 @@ local function startBattle()
     actindex = {}
     selected_enemies = {}
 
-
-    battle = Encounter()
-    Controller:load(battle)
+    Controller:load(Encounter())
     battling = true
 
 end
@@ -380,7 +377,7 @@ function love.draw()
 
         love.graphics.setColor(1,1,1,1)
         love.graphics.setFont(Battlefont)
-        love.graphics.print("Press Z to start the battle!", WIDTH/3-50, HEIGHT/2, 0)
+        love.graphics.print("Press Z to start the battle!", WIDTH/3-50, 700, 0)
 
     end
 
