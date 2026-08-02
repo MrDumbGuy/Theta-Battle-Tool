@@ -213,6 +213,8 @@ end
 
 local function ExecuteCommands()
 
+    Controller:setState("COMMANDS")
+
     print("ExecuteCommands()")
 
     local CommandReturned
@@ -274,22 +276,6 @@ function love.keypressed(key)
 
     print("Controller's state = "..Controller:getState())
 
-    selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_attack, actname, actindex)
-
-    --Go back to the Battle UI or move on to executing every command?
-    if Controller:getPartyMember() > #Controller.battle.party_members then
-        Controller:setPartyMember(0)
-        Controller:setState("COMMANDS")
-        ExecuteCommands()
-        Sole:updatePosArray(nil)
-    elseif Controller.doneNavigating and Controller:getState() ~= "BULLETS" and Controller:getState() ~= "COMMANDS" and Controller:getState() ~= "ATTACKING" then
-        Controller.battle.UIs[Controller:getPartyMember()]:subtext("* A wild battle commentary appeared!")
-        Controller.battle.UIs[Controller:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
-        Controller:setState("BATTLEUI")
-        Controller.doneNavigating = false
-        selected_enemy = nil
-    end
-
     if Controller:getState() == "COMMANDS" then
 
         if Controller:getPartyMember() <= #Controller.battle.party_members then
@@ -307,6 +293,24 @@ function love.keypressed(key)
     if Controller:getState() ~= "BULLETS" then
         print("Current State: "..Controller:getState())
         print("Party Member:"..Controller:getPartyMember())
+    end
+
+    --This has to run after  the above to prevent misfires.
+
+    selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_attack, actname, actindex)
+
+    --Go back to the Battle UI or move on to executing every command?
+    if Controller.doneNavigating and Controller:getPartyMember() > #Controller.battle.party_members then
+        Controller:setPartyMember(0)
+        Controller:setState("COMMANDS")
+        ExecuteCommands()
+        Sole:updatePosArray(nil)
+    elseif Controller.doneNavigating and Controller:getState() ~= "BULLETS" and Controller:getState() ~= "COMMANDS" and Controller:getState() ~= "ATTACKING" then
+        Controller.battle.UIs[Controller:getPartyMember()]:subtext("* A wild battle commentary appeared!")
+        Controller.battle.UIs[Controller:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
+        Controller:setState("BATTLEUI")
+        Controller.doneNavigating = false
+        selected_enemy = nil
     end
 
 end

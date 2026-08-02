@@ -59,9 +59,9 @@ function ItemManager:generateItemText(target_member_no, user_member_no, party_me
     print("target_member_no"..target_member_no)
     print("user_member_no"..user_member_no)
     if target_member_no == user_member_no then
-        return party_members[user_member_no].name.." used "..self.tempitem.name.." !"
+        return party_members[user_member_no].name.." used "..self.tempitem.name.."!"
     else
-        return party_members[user_member_no].name.." used "..self.tempitem.name.." on "..party_members[target_member_no].name.." !"
+        return party_members[user_member_no].name.." used "..self.tempitem.name.." on "..party_members[target_member_no].name.."!"
     end
 
 end

@@ -218,7 +218,6 @@ function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_atta
             function()
 
                 if self:getState() == "COMMANDS" then self.battle.party_members[self:getPartyMember()]:act(selected_enemies[self:getPartyMember()], actname[self:getPartyMember()], self.battle.UIs[self:getPartyMember()]) end
-                return "ACTCOMMAND"
 
             end)
 
