@@ -7,7 +7,6 @@ require "soul"
 require "submenu"
 require "battlebox"
 require "bullet"
-require "encounter"
 flux = require "flux"
 tick = require "tick"
 json = require "json"
@@ -90,7 +89,7 @@ local function startBattle()
     actindex = {}
     selected_enemies = {}
 
-    Controller:load(Encounter())
+    Controller:load()
     battling = true
 
 end

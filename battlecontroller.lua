@@ -1,7 +1,9 @@
+require "encounter"
+
 local Controller = {}
 
-function Controller:load(battle)
-    self.battle = battle
+function Controller:load()
+    self.battle = Encounter()
     self.current_state = "BATTLEUI"
     self.Commands = {}
     self.doneNavigating = false
