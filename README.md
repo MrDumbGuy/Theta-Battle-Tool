@@ -1,11 +1,14 @@
 # Theta-Battle-Tool
+
+![Theta Battle Tool Logo](sprites/TBT-Logo.png)
+
 A simple fan battle creation tool for Deltarune. Made with LÖVE.
 
 ---
 
 ## About
 
-Theta Battle Tool
+Theta Battle Tool (c) Sedat Arıtürk 2026
 
 ### What is Theta Battle Tool
 

@@ -52,6 +52,8 @@ SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 
 selected_enemy = nil
 
+local SplashScreen = love.graphics.newImage("sprites/ThetaBattleTool-Titlecard.png")
+
 --Just in case I add a menu for changing battles or something.
 local battling
 
@@ -375,8 +377,13 @@ function love.draw()
     else
 
         love.graphics.setColor(1,1,1,1)
+        love.graphics.draw(SplashScreen, 0, 0)
         love.graphics.setFont(Battlefont)
         love.graphics.print("Press Z to start the battle!", WIDTH/3-50, 700, 0)
+        love.graphics.setColor(0.37,1,0.75,1)
+        love.graphics.print("TBT (c) SEDAT ARITÜRK 2026", WIDTH/3-50, 750)
+        love.graphics.setColor(1,0,0,1)
+        love.graphics.print("SEE README, LICENSE & CREDITS", WIDTH/3-50, 800)
 
     end
 
