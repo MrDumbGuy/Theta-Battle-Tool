@@ -171,16 +171,24 @@ function Mizzle:remove(enemies)
 end
 
 function Mizzle:spared()
-    
+
+    self.mercy = self.mercy + 20
+    self.mercyup = 20
+
     if self.mercy >= 100 then
         self.mercied = true
+        if self.mercy > 100 then
+            self.mercyup = self.mercyup - (self.mercy - 100)
+            self.mercy = 100
+        else
+            self.mercyup = nil --Setting to 0 activates the display logic, so we set it to nil instead.
+        end
     else
-        self.mercy = self.mercy + 10
-        self.mercyup = 10
         self.mercied = false
     end
 
     print(self.name.." Mercy at: "..self.mercy)
+
 end
 
 function Mizzle:update(dt, localcurrentstate, enemies)
