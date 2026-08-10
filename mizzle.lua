@@ -89,10 +89,16 @@ function Mizzle:act(actname, ui) --Handle acts passed by a partyMember() based o
 end
 
 function Mizzle:hurt(n)
-    self.sleeping = false
-    self:set_animation(4)
-    self.hp = self.hp - n
-    print(self.name.." hp is: "..self.hp)
+    if n > 0 then
+        if self.sleeping then
+            self.sleeping = false
+            self:set_animation(4)
+        end
+        self.hp = self.hp - n
+        print(self.name.." hp is: "..self.hp)
+    else
+        print(self.name.." was not hurt!")
+    end
 end
 
 function Mizzle:set_animation(n)
