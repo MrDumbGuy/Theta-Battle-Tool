@@ -32,9 +32,11 @@ function BattleBar:draw()
     end
 end
 
-function BattleBar:update(dt)
-    self.rectanglex = self.rectanglex - 750*dt
-    if self.rectanglex < -50 then
-        self:attack()
+function BattleBar:update(dt, enemies, enemies_to_attack, members_to_attack)
+    if not self.used then
+        self.rectanglex = self.rectanglex - 750*dt
+        if self.rectanglex < -50 then
+            self:attack(enemies, enemies_to_attack, members_to_attack)
+        end
     end
 end

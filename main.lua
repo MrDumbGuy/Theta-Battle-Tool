@@ -103,7 +103,7 @@ function love.update(dt)
 
         for i = 1, #battlebars do
             if battlebars[i] then
-                battlebars[i]:update(dt)
+                battlebars[i]:update(dt, Controller.battle.enemies, enemies_to_attack, members_to_attack)
             end
         end
 
