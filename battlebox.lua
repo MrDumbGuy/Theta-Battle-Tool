@@ -7,10 +7,10 @@ function Battlebox:new()
     self.name = "BATTLEBOX"
 
     self.animations = {
-        [1] = {"opening", 17, 30, false},
-        [2] = {"still", 1, 1, true},
-        [3] = {"closing", 28, 30, false},
-        [4] = {"invisible", 1, 1, true},
+        [1] = {name = "opening", length = 17, FPS = 30, looping = false},
+        [2] = {name = "still", length = 1, FPS = 1, looping = true},
+        [3] = {name = "closing", length = 28, FPS = 30, looping = false},
+        [4] = {name = "invisible", length = 1, FPS = 1, looping = true},
    }
 
     self.spritesheet = love.graphics.newImage("sprites/battlebox.png")

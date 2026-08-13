@@ -2,12 +2,12 @@ function AnimateQuadrants(object, dt, specialcase)
 
     if object.quadrants[object.currentanimation] then
         --PartyMember animations not nil, updating frame to display
-        object.currentframecount = object.currentframecount+ dt * object.animations[object.currentanimation][3]
+        object.currentframecount = object.currentframecount+ dt * object.animations[object.currentanimation].FPS
 
         --This part handles looping and unlooping animations.
-        if math.floor(object.currentframecount) > object.animations[object.currentanimation][2] then
+        if math.floor(object.currentframecount) > object.animations[object.currentanimation].length then
 
-            if object.animations[object.currentanimation][4] then -- if the animation loops:
+            if object.animations[object.currentanimation].looping then -- if the animation loops:
 
                 object.currentframecount = 1
 

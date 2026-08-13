@@ -29,13 +29,13 @@ function Mizzle:new(name, x, y, animations, spritesheet, spritesheetarray, defau
 
     for i = 0,#self.animations do
 
-        self.animations[i][5] = self.animations[i][5] * self.size
-        self.animations[i][6] = self.animations[i][6] * self.size
+        self.animations[i].xOffset = self.animations[i].xOffset * self.size
+        self.animations[i].yOffset = self.animations[i].yOffset * self.size
 
         self.quadrants[i] = {}
 
-        for j = 1,animations[i][2] do
-            local localquad = spritesheetarray.frames[self.animations[i][1]..j..".png"].frame
+        for j = 1,animations[i].length do
+            local localquad = spritesheetarray.frames[self.animations[i].name..j..".png"].frame
             self.quadrants[i][j] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
         end
 
@@ -119,7 +119,7 @@ end
 function Mizzle:draw()
 
     if self.currentquadrant then
-        love.graphics.draw(self.spritesheet, self.currentquadrant, self.x + self.animations[self.currentanimation][5], self.y + self.animations[self.currentanimation][6], 0, self.size, self.size)
+        love.graphics.draw(self.spritesheet, self.currentquadrant, self.x + self.animations[self.currentanimation].xOffset, self.y + self.animations[self.currentanimation].yOffset, 0, self.size, self.size)
 
     end
 

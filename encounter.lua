@@ -12,17 +12,16 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         --The order of these first 10 animations must be the exact same for every party member.
         --Other misc. animations may be ordered on a per-character basis.
 
-        --[id] = {"name", total number of frames, fps, loops, offsetX, offsetY}
-        [0] = {"krisIdle", 6, 6, true, 0, 0},
-        [1] = {"krisAttack", 8, 15, false, 5, -20},
-        [2] = {"krisAct", 11, 11, false, 0, 0},
-        [3] = {"krisItem", 8, 12, false, -21, -15},
-        [4] = {"krisAct", 11, 11, false, 0, 0}, --I'm fairly confident that Kris uses the same animation for sparing and acting.
-        [5] = {"krisDefend", 6, 12, false, 0, -7},
-        [6] = {"krisAttackWait", 1, 1, true, 0, -20},
-        [7] = {"krisActWait", 1, 1, true, 0, 0},
-        [8] = {"krisActWait", 1, 1, true, 0, 0}, --Again, sparing is visually the same as acting. 
-        [9] = {"krisDefendLoop", 1, 1, true, 0, -7}, --Unlooping animations set animation to default, so this animation is required to keep their last sprite.
+        [0] = {name = "krisIdle", length = 6, FPS = 6, looping = true, xOffset = 0, yOffset = 0},
+        [1] = {name = "krisAttack", length = 8, FPS = 15, looping = false, xOffset = 5, yOffset = -20},
+        [2] = {name = "krisAct", length = 11, FPS = 11, looping = false, xOffset = 0, yOffset = 0},
+        [3] = {name = "krisItem", length = 8, FPS = 12, looping = false, xOffset = -21, yOffset = -15},
+        [4] = {name = "krisAct", length = 11, FPS = 11, looping = false, xOffset = 0, yOffset = 0}, --I'm fairly confident that Kris uses the same animation for sparing and acting.
+        [5] = {name = "krisDefend", length = 6, FPS = 12, looping = false, xOffset = 0, yOffset = -7},
+        [6] = {name = "krisAttackWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -20},
+        [7] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0},
+        [8] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0}, --Again, sparing is visually the same as acting. 
+        [9] = {name = "krisDefendLoop", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -7}, --Unlooping animations set animation to default, so this animation is required to keep their last sprite.
     }
 
     local kris_buttons = { --Generally FIGHT/ACT/ITEM/SPARE/DEFEND but I used ATTACK for some reason
@@ -84,12 +83,12 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     --Enemy related data
     local mizzle_anims = {
-        [0] = {"mizzleIdle", 5, 5, true, 0, 0},
-        [1] = {"mizzleIdlePink", 5, 5, true, 0, -0.3},
-        [2] = {"mizzleAlarm", 10, 10, true, 0, 0},
-        [3] = {"mizzleAlarmPink", 10, 10, true, 0, -0.3},
-        [4] = {"mizzleHurt", 1, 1, true, 0, 0},
-        [5] = {"mizzleHurtPink", 1, 1, true, 0, 0}
+        [0] = {name = "mizzleIdle", length = 5, FPS = 5, looping = true, xOffset = 0, yOffset = 0},
+        [1] = {name = "mizzleIdlePink", length = 5, FPS = 5, looping = true, xOffset = 0, yOffset = -0.3},
+        [2] = {name = "mizzleAlarm", length = 10, FPS = 10, looping = true, xOffset = 0, yOffset = 0},
+        [3] = {name = "mizzleAlarmPink", length = 10, FPS = 10, looping = true, xOffset = 0, yOffset = -0.3},
+        [4] = {name = "mizzleHurt", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0},
+        [5] = {name = "mizzleHurtPink", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0}
     }
 
     local mizzlesheet = love.graphics.newImage("sprites/mizzle.png")

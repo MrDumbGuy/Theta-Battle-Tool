@@ -31,8 +31,8 @@ function PartyMember:new(name, xpos, ypos, animations, defaultquadrant, defaulta
 
         self.quadrants[i] = {}
 
-        for j = 1, animations[i][2] do
-            local filename = animations[i][1]..j..".png"
+        for j = 1, animations[i].length do
+            local filename = animations[i].name..j..".png"
             local quaddata = spritesheetarray.frames[filename]
             self.quadrants[i][j] = love.graphics.newQuad(quaddata.frame.x, quaddata.frame.y, quaddata.frame.w, quaddata.frame.h, sheetwidth, sheetheight)
         end
@@ -68,7 +68,7 @@ function PartyMember:draw()
 
     if self.quadrants[self.currentanimation] and self.currentquadrant then
 
-        love.graphics.draw(self.spritesheetpng, self.currentquadrant, self.xpos + self.animations[self.currentanimation][5], self.ypos + self.animations[self.currentanimation][6], 0, self.size, self.size)
+        love.graphics.draw(self.spritesheetpng, self.currentquadrant, self.xpos + self.animations[self.currentanimation].xOffset, self.ypos + self.animations[self.currentanimation].yOffset, 0, self.size, self.size)
 
     else
 
