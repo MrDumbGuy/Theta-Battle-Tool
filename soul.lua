@@ -5,7 +5,7 @@ function Soul:new()
     self.x = 0
     self.y = 0
     self.size = 1.5
-    
+
     self.currentmenuposition = 1
 
     self.top = 200

@@ -325,7 +325,7 @@ function love.keypressed(key)
 
         if key == "z" then
             startBattle()
-    
+
         end
 
     end

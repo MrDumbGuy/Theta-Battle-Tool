@@ -1,12 +1,3 @@
---And so begins the dreaded "refactor".
---With this new object I aim to turn this project into a proper engine
---[[Goals I have with this file:
-
-    1) Many previously global variables will be pulled from the encounter object
-    2) The code here will serve as an example encounter to modify
-        This will be much easier to modify compared to main.lua, as it contained engine code alongside the encounter configuration
-]]
-
 --Load your custom enemies in here!
 
 require "mizzle"

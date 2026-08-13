@@ -1,6 +1,6 @@
 Background = Object:extend()
 
-function Background:new(name, length, FPS)
+function Background:new(name)
 
     self.video = love.graphics.newVideo("sprites/"..name..".ogv")
 

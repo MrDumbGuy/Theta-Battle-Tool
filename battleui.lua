@@ -5,7 +5,7 @@ function BattleUi:new(name, background, header, buttons, x, y, targetpartymember
     self.sheetimage = sheetimage
     self.sheetwidth = sheetdata.meta.size.w
     self.sheetheight = sheetdata.meta.size.h
-    
+
     local bgquaddata = sheetdata.frames["ui_"..background..".png"].frame
     self.backgroundquad = love.graphics.newQuad(bgquaddata.x, bgquaddata.y, bgquaddata.w, bgquaddata.h, sheetdata.meta.size.w, sheetdata.meta.size.h)
     local headerquaddata = sheetdata.frames["header_"..header..".png"].frame

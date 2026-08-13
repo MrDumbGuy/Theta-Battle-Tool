@@ -5,7 +5,7 @@
 Submenu = Object:extend()
 
 function Submenu:new(posarray, targetstatearr, targetenemy, isEnemyList)
-    
+
     --These are absolutely REQUIRED. No exceptions.
     self.positions = posarray
     self.targetstatearr = targetstatearr

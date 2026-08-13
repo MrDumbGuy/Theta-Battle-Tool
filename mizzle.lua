@@ -74,7 +74,7 @@ function Mizzle:act(actname, ui) --Handle acts passed by a partyMember() based o
         end
 
     else
-        
+
         --Not necessary, but helpful for debugging.
         ui:subtext("* Someone did an act...\n* But it was not defined in the enemy file!\n* Check mizzle.lua")
 
@@ -111,7 +111,7 @@ function Mizzle:set_animation(n)
     if self.sparable then
         self.currentanimation = n+1
     end
-    
+
     self.currentframecount = 1
 
 end
@@ -197,9 +197,9 @@ function Mizzle:update(dt, localcurrentstate, enemies)
         if self.mercyup then
             self.mercyup = nil
         end
-        
+
         if self.currentanimation == 4 or self.currentanimation == 5 then
-            
+
             if self.hp > 0 then
                 self:set_animation(2)
             end
