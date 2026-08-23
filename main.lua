@@ -53,7 +53,7 @@ SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 selected_enemy = nil
 
 local SplashScreen = love.graphics.newImage("sprites/ThetaBattleTool-Titlecard.png")
-
+local SplashSong = love.audio.newSource("music/flowery.ogg", "stream")
 --Just in case I add a menu for changing battles or something.
 local battling
 
@@ -67,8 +67,6 @@ local actindex
 
 --Arrays used for submenus:
 local selected_enemies
-
---The encounter object.
 
 --[[
     Although you can, I'd advise against placing anything battle-specific here.
@@ -90,6 +88,7 @@ local function startBattle()
     actindex = {}
     actindex = {}
     selected_enemies = {}
+    SplashSong:stop()
 
     Controller:load()
     battling = true
@@ -131,6 +130,10 @@ function love.update(dt)
                 Controller.battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit.")
             end
             Sole:updatePosArray(nil)
+        end
+    else
+        if not SplashSong:isPlaying() then
+            SplashSong:play()
         end
     end
 
@@ -353,7 +356,7 @@ function love.draw()
         love.graphics.setColor(51/255, 32/255, 51/255)
         love.graphics.rectangle("fill", 0, 733, 1280, 4)
 
-        love.graphics.setColor(1,1,1,1) --If you don't set to white when drawing images, the image colors get altered.
+        love.graphics.setColor(1,1,1,1) --If you don't set to white when drawing images, the image colors may get altered.
 
         Controller:drawForeground()
 
@@ -368,6 +371,7 @@ function love.draw()
         Sole:draw(Controller:getState())
 
     else
+        --A primitive title screen. This is just a placeholder 'till I make a better one.
 
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(SplashScreen, 0, 0)

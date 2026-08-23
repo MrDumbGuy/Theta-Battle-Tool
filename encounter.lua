@@ -171,10 +171,9 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     --Music
     --This should allow one to dynamically swap songs
     --Maybe a jukebox enemy with a unique act could change the song :)
-    self.MUS_Vaporbattle = love.audio.newSource("music/battle_vapor.ogg", "stream")
-    self.MUS_Churchbattle = love.audio.newSource("music/ch4_battle.ogg", "stream")
+    self.MUS_Flowerbattle = love.audio.newSource("music/rakuichi_buster_wip.ogg", "stream")
 
-    self.MUS_Battlemusic = self.MUS_Churchbattle
+    self.MUS_Battlemusic = self.MUS_Flowerbattle
 
     love.audio.play(self.MUS_Battlemusic)
 
