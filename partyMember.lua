@@ -4,11 +4,12 @@ require "animate"
 
 PartyMember = Object:extend()
 
-function PartyMember:new(name, xpos, ypos, animations, defaultquadrant, defaultanim, animationSpecialLoops, spritesheetarray, spritesheetpng, size, maxhp, ATK, DEF)
+function PartyMember:new(name, xpos, ypos, arr_button_states, animations, defaultquadrant, defaultanim, animationSpecialLoops, spritesheetarray, spritesheetpng, size, maxhp, ATK, DEF)
 
     self.name = name
     self.xpos = xpos
     self.ypos = ypos
+    self.ARR_BUTTON_STATES = arr_button_states
     self.animations = animations
     self.defaultanim = defaultanim
     self.size = size

@@ -81,15 +81,12 @@ end
 function Controller:BULLETSCleanup() --Self-explanotory.
     for i = 1, #self.battle.party_members do
         self.Commands[i] = {}
+        self.battle.party_members[i].isdefending = false
+        if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation(0) end
+        self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
+        self.battle.UIs[i].buttonmode = 1
     end
-    if self:getState() == "BULLETS" then
-        for i = 1, #self.battle.party_members do
-            self.battle.party_members[i].isdefending = false
-            if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation(0) end
-            self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
-        end
-        self:setState("BATTLEUI")
-    end
+    self:setState("BATTLEUI")
 end
 
 function Controller:setCommand(partymemberindex, n, misc)
@@ -109,7 +106,9 @@ end
 --It handles a majority of the UI logic and every single UI-related state change
 --Do not edit this unless you're CERTAIN you know what you're doing.
 --(Or have a backup, like the official one over at https://github.com/sedat-34/Theta-Battle-Tool)
-function Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_attack, actname, actindex)
+function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname, actindex)
+
+    local ARR_STATES = self.battle.party_members[self:getPartyMember()].ARR_BUTTON_STATES
 
     if self:getState() == "BATTLEUI" then --The main battle menu. If you see the five buttons, you're in this state.
 

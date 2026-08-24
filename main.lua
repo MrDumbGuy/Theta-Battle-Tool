@@ -23,16 +23,6 @@ love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 local WIDTH = 1280
 local HEIGHT = 960
 
-local ARR_STATES = {--UI Buttons to states as used in Controller.current_state
-                    --MAGIC will also be used in ACTUI since behavior is similar enough
-                    --It still has a graphical difference (magic button over act button) but no functional one.
-    "ATTACKUI",
-    "ACTUI",
-    "ITEMUI",
-    "SPAREUI",
-    "DEFEND",
-}
-
 --The game's fonts.
 --These need to be global because too many engine components rely on them.
 --They're also present in every Deltarune battle ever
@@ -309,7 +299,7 @@ function love.keypressed(key)
 
         --This has to run after  the above to prevent misfires.
 
-        selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, ARR_STATES, selected_enemies, enemies_to_attack, actname, actindex)
+        selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname, actindex)
 
         --Go back to the Battle UI or move on to executing every command?
         if Controller.doneNavigating and Controller:getPartyMember() > #Controller.battle.party_members then

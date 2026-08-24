@@ -47,10 +47,18 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         krisjson:close()
     end
 
-    local kris_1 = PartyMember("Kris1", 100, 202, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
+    local kris_button_states = {
+        "ATTACKUI",
+        "ACTUI",
+        "ITEMUI",
+        "SPAREUI",
+        "DEFEND",
+    }
+
+    local kris_1 = PartyMember("Kris1", 100, 202, kris_button_states, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
     kris_1:set_animation("ATTACK")
 
-    local kris_2 = PartyMember("Kris2", 100, 402, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
+    local kris_2 = PartyMember("Kris2", 100, 402, kris_button_states, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
     kris_2:set_animation("ATTACK")
 
     self.party_members = {
