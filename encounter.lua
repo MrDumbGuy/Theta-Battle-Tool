@@ -9,24 +9,26 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.Box = Battlebox()
 
     local kris_anims = {
-        --The order of these first 10 animations must be the exact same for every party member.
-        --Other misc. animations may be ordered on a per-character basis.
 
-        [0] = {name = "krisIdle", length = 6, FPS = 6, looping = true, xOffset = 0, yOffset = 0},
-        [1] = {name = "krisAttack", length = 8, FPS = 15, looping = false, xOffset = 5, yOffset = -20},
-        [2] = {name = "krisAct", length = 11, FPS = 11, looping = false, xOffset = 0, yOffset = 0},
-        [3] = {name = "krisItem", length = 8, FPS = 12, looping = false, xOffset = -21, yOffset = -15},
-        [4] = {name = "krisAct", length = 11, FPS = 11, looping = false, xOffset = 0, yOffset = 0}, --I'm fairly confident that Kris uses the same animation for sparing and acting.
-        [5] = {name = "krisDefend", length = 6, FPS = 12, looping = false, xOffset = 0, yOffset = -7},
-        [6] = {name = "krisAttackWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -20},
-        [7] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0},
-        [8] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0}, --Again, sparing is visually the same as acting. 
-        [9] = {name = "krisDefendLoop", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -7}, --Unlooping animations set animation to default, so this animation is required to keep their last sprite.
+        --These used to be number-indexed. They are now string-indexed for clarity.
+        --The animations of these 10 specific keys still need to exist for all party members.
+        --(Not the names)
+
+        ["idle"] = {name = "krisIdle", length = 6, FPS = 6, looping = true, xOffset = 0, yOffset = 0},
+        ["attack"] = {name = "krisAttack", length = 8, FPS = 15, looping = false, xOffset = 5, yOffset = -20},
+        ["act"] = {name = "krisAct", length = 11, FPS = 11, looping = false, xOffset = 0, yOffset = 0},
+        ["item"] = {name = "krisItem", length = 8, FPS = 12, looping = false, xOffset = -21, yOffset = -15},
+        ["spare"] = {name = "krisAct", length = 11, FPS = 11, looping = false, xOffset = 0, yOffset = 0}, --I'm fairly confident that Kris uses the same animation for sparing and acting.
+        ["defend"] = {name = "krisDefend", length = 6, FPS = 12, looping = false, xOffset = 0, yOffset = -7},
+        ["ATTACKUI"] = {name = "krisAttackWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -20},
+        ["ACTUI"] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0},
+        ["SPAREUI"] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0}, --Again, sparing is visually the same as acting. 
+        ["DEFEND"] = {name = "krisDefendLoop", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -7}, --Unlooping animations set animation to default, so this animation is required to keep their last sprite.
     }
 
     local kris_buttons = { --Generally FIGHT/ACT/ITEM/SPARE/DEFEND but I used ATTACK for some reason
                            --And because it's written all over the code I can't change it anymore
-                           --A monster party member could use MAGIC through the ACT menu
+                           --Not to be confused with the keys in kris_anims
         [1] = {"attack"},
         [2] = {"act"},
         [3] = {"item"},
@@ -35,7 +37,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     }
 
     local krisSpecialLoops = {
-        [5] = 9,
+        ["defend"] = "DEFEND",
     }
 
     local krissheet = love.graphics.newImage("sprites/krissheet.png")

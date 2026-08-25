@@ -82,7 +82,7 @@ function Controller:BULLETSCleanup() --Self-explanotory.
     for i = 1, #self.battle.party_members do
         self.Commands[i] = {}
         self.battle.party_members[i].isdefending = false
-        if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation(0) end
+        if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation("idle") end
         self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
         self.battle.UIs[i].buttonmode = 1
     end
@@ -125,7 +125,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self:setCommand(self:getPartyMember(), 2, nil)
             self.battle.UIs[self:getPartyMember() - 1]:subtext("* A wild battle commentary appeared!")
             self.battle.UIs[self:getPartyMember() - 1]:menuState(Sole, 0, 0, "BATTLEUI", {})
-            self.battle.party_members[self:getPartyMember() - 1]:set_animation(0)
+            self.battle.party_members[self:getPartyMember() - 1]:set_animation("idle")
             love.audio.play(SND_SELECT)
             self:setPartyMember(self:getPartyMember() - 1)
         elseif key == "z" then
@@ -169,7 +169,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             love.audio.play(SND_SELECT)
             self.battle.UIs[self:getPartyMember()]:subtext("* A wild battle commentary appeared!")
             self.battle.UIs[self:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
-            self.battle.party_members[self:getPartyMember()]:set_animation(0)
+            self.battle.party_members[self:getPartyMember()]:set_animation("idle")
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             selected_enemy = self.battle.enemies[Sole.currentmenuposition]
@@ -197,7 +197,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             love.audio.play(SND_SELECT)
             self.battle.UIs[self:getPartyMember()]:subtext("* A wild battle commentary appeared!")
             self.battle.UIs[self:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
-            self.battle.party_members[self:getPartyMember()]:set_animation(0)
+            self.battle.party_members[self:getPartyMember()]:set_animation("idle")
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             selected_enemy = self.battle.enemies[Sole.currentmenuposition]
@@ -215,7 +215,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             love.audio.play(SND_SELECT)
             selected_enemy = nil
             self.battle.UIs[self:getPartyMember()]:menuState(Sole, 0, 0, "ACTUI", Enemysubarray)
-            self.battle.party_members[self:getPartyMember()]:set_animation(0)
+            self.battle.party_members[self:getPartyMember()]:set_animation("idle")
 
         elseif key == "z" then
             if not actname then actname = {} end
@@ -248,7 +248,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             love.audio.play(SND_SELECT)
             self.battle.UIs[self:getPartyMember()]:subtext("* A wild battle commentary appeared!")
             self.battle.UIs[self:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
-            self.battle.party_members[self:getPartyMember()]:set_animation(0)
+            self.battle.party_members[self:getPartyMember()]:set_animation("idle")
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             self.battle.ItemManager.tempitem = self.battle.items[Sole.currentmenuposition]
@@ -264,7 +264,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
         if key == "x" then
             love.audio.play(SND_SELECT)
             self.battle.UIs[self:getPartyMember()]:menuState(Sole, 0, 0, "ITEMUI", self.battle.ItemSubArray)
-            self.battle.party_members[self:getPartyMember()]:set_animation(0)
+            self.battle.party_members[self:getPartyMember()]:set_animation("idle")
         elseif key == "z" then
             love.audio.play(SND_SELECT)
 
@@ -295,7 +295,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             love.audio.play(SND_SELECT)
             self.battle.UIs[self:getPartyMember()]:subtext("* A wild battle commentary appeared!")
             self.battle.UIs[self:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
-            self.battle.party_members[self:getPartyMember()]:set_animation(0)
+            self.battle.party_members[self:getPartyMember()]:set_animation("idle")
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             selected_enemy = self.battle.enemies[Sole.currentmenuposition]
@@ -308,7 +308,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
 
                     if self:getState() == "COMMANDS" then
                         self.battle.party_members[self:getPartyMember()]:spare(selected_enemies[self:getPartyMember()])
-                        self.battle.party_members[self:getPartyMember()]:set_animation(4)
+                        self.battle.party_members[self:getPartyMember()]:set_animation("spare")
                     end
 
                     return "SPARECOMMAND"

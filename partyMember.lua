@@ -28,14 +28,14 @@ function PartyMember:new(name, xpos, ypos, arr_button_states, animations, defaul
 
     local sheetwidth, sheetheight = spritesheetarray.meta.size.w, spritesheetarray.meta.size.h
 
-    for i = 0,#self.animations do --Load every frame of every animation, index them by numbers
+    for k, v in pairs(self.animations) do --Load every frame of every animation, index them by numbers
 
-        self.quadrants[i] = {}
+        self.quadrants[k] = {}
 
-        for j = 1, animations[i].length do
-            local filename = animations[i].name..j..".png"
+        for j = 1, v.length do
+            local filename = v.name..j..".png"
             local quaddata = spritesheetarray.frames[filename]
-            self.quadrants[i][j] = love.graphics.newQuad(quaddata.frame.x, quaddata.frame.y, quaddata.frame.w, quaddata.frame.h, sheetwidth, sheetheight)
+            self.quadrants[k][j] = love.graphics.newQuad(quaddata.frame.x, quaddata.frame.y, quaddata.frame.w, quaddata.frame.h, sheetwidth, sheetheight)
         end
 
     end
@@ -46,16 +46,6 @@ function PartyMember:new(name, xpos, ypos, arr_button_states, animations, defaul
     self.defaultquadrant = love.graphics.newQuad(defaultquaddata.frame.x, defaultquaddata.frame.y, defaultquaddata.frame.w, defaultquaddata.frame.h, sheetwidth, sheetheight)
 
     self.isdefending = false
-
-    self.animationsfromstate = { --When a string is passed into set_animation(), these are checked to convert into a numerical value
-        ["ATTACKUI"] = 6,
-        ["ACTUI"] = 7,
-        ["ITEMUI"] = 0,
-        ["SPAREUI"] = 8,
-        ["DEFEND"] = 5,
-        ["ATTACK"] = 1,
-
-    }
 
     for k, v in pairs(self.animationSpecialLoops) do
         print (self.name.." special loop "..k.." : "..v)
@@ -90,17 +80,10 @@ function PartyMember:draw()
 end
 
 function PartyMember:set_animation(animation)
-    if type(animation) == "number" then
+    if animation ~= "ITEMUI" then
         self.currentanimation = animation
-    else
-        self.currentanimation = self.animationsfromstate[animation]
-
-        if self.currentanimation == nil then
-            self.currentanimation = self.defaultanim
-        end
-
-    end
         self.currentframecount = 1
+    end
 end
 
 function PartyMember:attack(local_enemy, mult, enemies)
