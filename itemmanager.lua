@@ -75,7 +75,7 @@ function ItemManager:useItem(battle)
     if itemToUse then
 
         --Animate user to the item use animation
-        memberToUse:set_animation(3)
+        memberToUse:set_animation("item")
 
         --Give recipient the appropiate amount of HP
         memberToReceive:hpUp(itemToUse.hp)

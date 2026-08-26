@@ -7,10 +7,10 @@ function Battlebox:new()
     self.name = "BATTLEBOX"
 
     self.animations = {
-        [1] = {name = "opening", length = 17, FPS = 30, looping = false},
-        [2] = {name = "still", length = 1, FPS = 1, looping = true},
-        [3] = {name = "closing", length = 28, FPS = 30, looping = false},
-        [4] = {name = "invisible", length = 1, FPS = 1, looping = true},
+        ["opening"] = {name = "opening", length = 17, FPS = 30, looping = false},
+        ["still"] = {name = "still", length = 1, FPS = 1, looping = true},
+        ["closing"] = {name = "closing", length = 28, FPS = 30, looping = false},
+        ["invisible"] = {name = "invisible", length = 1, FPS = 1, looping = true},
    }
 
     self.spritesheet = love.graphics.newImage("sprites/battlebox.png")
@@ -23,17 +23,17 @@ function Battlebox:new()
     end
 
     self.quadrants = {
-        [1] = {},
-        [2] = {},
-        [3] = {},
-        [4] = {}
+        ["opening"] = {},
+        ["still"] = {},
+        ["closing"] = {},
+        ["invisible"] = {}
     }
 
     self.quadrantoffsets = {
-        [1] = {},
-        [2] = {},
-        [3] = {},
-        [4] = {}
+        ["opening"] = {},
+        ["still"] = {},
+        ["closing"] = {},
+        ["invisible"] = {}
     }
 
     local sheetwidth, sheetheight = self.spritesheetarray.meta.size.w, self.spritesheetarray.meta.size.h
@@ -41,42 +41,42 @@ function Battlebox:new()
     for i = 1, 17 do
         if i >= 10 then
             local localquad = self.spritesheetarray.frames["BBS_00"..i..".png"].frame
-            self.quadrants[1][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
-            self.quadrantoffsets[1][i] = {}
-            self.quadrantoffsets[1][i].w = (361 - localquad.w)/2
-            self.quadrantoffsets[1][i].h = (363 - localquad.h)/2
+            self.quadrants["opening"][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
+            self.quadrantoffsets["opening"][i] = {}
+            self.quadrantoffsets["opening"][i].w = (361 - localquad.w)/2
+            self.quadrantoffsets["opening"][i].h = (363 - localquad.h)/2
         else
             local localquad = self.spritesheetarray.frames["BBS_000"..i..".png"].frame
-            self.quadrants[1][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
-            self.quadrantoffsets[1][i] = {}
-            self.quadrantoffsets[1][i].w = (361 - localquad.w)/2
-            self.quadrantoffsets[1][i].h = (363 - localquad.h)/2
+            self.quadrants["opening"][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
+            self.quadrantoffsets["opening"][i] = {}
+            self.quadrantoffsets["opening"][i].w = (361 - localquad.w)/2
+            self.quadrantoffsets["opening"][i].h = (363 - localquad.h)/2
         end
     end
 
     local localquad = self.spritesheetarray.frames["BBS_0017.png"].frame
-    self.quadrants[2][1] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
-    self.quadrantoffsets[2][1] = {}
-    self.quadrantoffsets[2][1].w = (361 - localquad.w)/2
-    self.quadrantoffsets[2][1].h = (363 - localquad.h)/2
+    self.quadrants["open"][1] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
+    self.quadrantoffsets["open"][1] = {}
+    self.quadrantoffsets["open"][1].w = (361 - localquad.w)/2
+    self.quadrantoffsets["open"][1].h = (363 - localquad.h)/2
 
     for i = 1, 28 do
-        local localquad = self.spritesheetarray.frames["BBS_00"..(i+17)..".png"].frame
-        self.quadrants[3][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
-        self.quadrantoffsets[3][i] = {}
-        self.quadrantoffsets[3][i].w = (361 - localquad.w)/2
-        self.quadrantoffsets[3][i].h = (361 - localquad.h)/2
+        localquad = self.spritesheetarray.frames["BBS_00"..(i+17)..".png"].frame
+        self.quadrants["closing"][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
+        self.quadrantoffsets["closing"][i] = {}
+        self.quadrantoffsets["closing"][i].w = (361 - localquad.w)/2
+        self.quadrantoffsets["closing"][i].h = (361 - localquad.h)/2
     end
 
     localquad = self.spritesheetarray.frames["BBS_0046.png"].frame
-    self.quadrants[4][1] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
+    self.quadrants["invisible"][1] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
 
-    self.currentanimation = 4
+    self.currentanimation = "invisible"
     self.currentframecount = 1
 
     self.animationSpecialLoops = {
-        [1] = 2,
-        [3] = 4,
+        ["opening"] = "still",
+        ["closing"] = "invisible",
     }
 
     self.top = 200
@@ -87,8 +87,13 @@ function Battlebox:new()
 end
 
 function Battlebox:draw()
-    if self.currentquadrant and self.currentanimation and self.currentframecount and self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)] then
-        love.graphics.draw(self.spritesheet, self.currentquadrant, self.left - 38 + self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)].w, self.top - 38 + self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)].h)
+    if self.currentquadrant
+    and self.currentanimation
+    and self.currentframecount
+    and self.quadrantoffsets[self.currentanimation] then
+        if self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)] then
+            love.graphics.draw(self.spritesheet, self.currentquadrant, self.left + self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)].w, self.top + self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)].h)
+        end
         --TODO Figure out why the unexpected offset is exctly 38 pixels
     end
 end

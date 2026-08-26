@@ -57,11 +57,11 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         "DEFEND",
     }
 
-    local kris_1 = PartyMember("Kris1", 100, 202, kris_button_states, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
-    kris_1:set_animation("ATTACK")
+    local kris_1 = PartyMember("Kris1", 100, 202, kris_button_states, kris_anims, "krisplace.png", "idle", krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
+    kris_1:set_animation("attack")
 
-    local kris_2 = PartyMember("Kris2", 100, 402, kris_button_states, kris_anims, "krisplace.png", 0, krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
-    kris_2:set_animation("ATTACK")
+    local kris_2 = PartyMember("Kris2", 100, 402, kris_button_states, kris_anims, "krisplace.png", "idle", krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
+    kris_2:set_animation("attack")
 
     self.party_members = {
         kris_1,
@@ -158,12 +158,14 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     self.items = {
         [1] = Item("70cm Zurna", 180),
-        [2] = Item("Ayran", 80)
+        [2] = Item("Ayran", 80),
+        [3] = Item("S. POISON", -100),
     }
 
     self.ItemSubArray = {
         [1] = {"* "..self.items[1].name, 218, 771},
-        [2] = {"* "..self.items[2].name, 778, 771}
+        [2] = {"* "..self.items[2].name, 778, 771},
+        [3] = {"* "..self.items[3].name, 218, 851},
     }
 
     self.ItemSub = Submenu(self.ItemSubArray, {"ITEMUI"}, nil, false)

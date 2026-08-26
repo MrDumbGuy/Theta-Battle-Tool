@@ -131,7 +131,7 @@ end
 
 local function BULLETSCleanup()
 
-    Controller.battle.Box:set_animation(3)
+    Controller.battle.Box:set_animation("closing")
     Sole:updateLimits(Controller.battle.Box)
 
     --Collect garbage and reset to first party member.
@@ -155,7 +155,7 @@ local function StartBULLETS()
         for i = 1, #Controller.battle.party_members do
             Controller.battle.UIs[i]:subtext("")
         end
-        Controller.battle.Box:set_animation(1)
+        Controller.battle.Box:set_animation("opening")
         Sole:updateLimits(Controller.battle.Box)
         Sole:centerInBox()
         tick.delay(function() BULLETSCleanup() end, 5)

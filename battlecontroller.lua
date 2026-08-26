@@ -82,7 +82,7 @@ function Controller:BULLETSCleanup() --Self-explanotory.
     for i = 1, #self.battle.party_members do
         self.Commands[i] = {}
         self.battle.party_members[i].isdefending = false
-        if self.battle.party_members[i].hp > 0 then self.battle.party_members[i]:set_animation("idle") end
+        if self.battle.party_members[i].hp > 0 and self:getState() == "BULLETS" then self.battle.party_members[i]:set_animation("idle") end
         self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
         self.battle.UIs[i].buttonmode = 1
     end
@@ -99,6 +99,15 @@ end
 
 function Controller:getCommand(partymemberindex, n) --Check the command type or get the UI subtext
     return self.Commands[partymemberindex][n]
+end
+
+function Controller:handleDowned()
+    if self.battle.party_members[self:getPartyMember()] == nil or self:getPartyMember() > #self.battle.party_members then return end
+    if self.battle.party_members[self:getPartyMember()].hp <= 0 then
+        while self.battle.party_members[self:getPartyMember()].hp <= 0 and self:getPartyMember() <= #self.battle.party_members + 1 do
+            self:setPartyMember(self:getPartyMember() + 1)
+        end
+    end
 end
 
 
@@ -159,6 +168,8 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
                 self:setCommand(self:getPartyMember(), 2, self.battle.party_members[self:getPartyMember()].name.." defended!") --Not displayed, necessary for regular flow of program.
                 self.doneNavigating = true
                 self:setPartyMember(self:getPartyMember() + 1)
+
+                self:handleDowned()
             end
 
         end
@@ -185,6 +196,8 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self:setCommand(self:getPartyMember(), 2, "* "..self.battle.party_members[self:getPartyMember()].name.." attacked "..selected_enemy.name.."!") --Not displayed, necessary for regular flow of program.
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
+
+            self:handleDowned()
 
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -229,6 +242,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             function()
 
                 if self:getState() == "COMMANDS" then self.battle.party_members[self:getPartyMember()]:act(selected_enemies[self:getPartyMember()], actname[self:getPartyMember()], self.battle.UIs[self:getPartyMember()]) end
+
                 return "ACTCOMMAND"
 
             end)
@@ -236,6 +250,8 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self:setCommand(self:getPartyMember(), 2, self.battle.act_sub_subs[selected_enemies[self:getPartyMember()]][actindex[self:getPartyMember()]][4](self.battle.party_members))
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
+
+            self:handleDowned()
 
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -284,6 +300,8 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
 
+            self:handleDowned()
+
         elseif key == "left" then
             Sole:updatePos(-1)
         elseif key == "right" then
@@ -318,6 +336,8 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self:setCommand(self:getPartyMember(), 2, "* "..self.battle.party_members[self:getPartyMember()].name.." spared "..selected_enemy.name.."!")
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
+
+            self:handleDowned()
 
         elseif key == "left" then
             Sole:updatePos(-1)

@@ -70,7 +70,11 @@ function PartyMember:draw()
 
     if self.hpup then
 
-        love.graphics.setColor(0,1,0,1)
+        if self.hpup == "MAX" or self.hpup > 0 then
+            love.graphics.setColor(0,1,0,1)
+        else
+            love.graphics.setColor(1,0,0,1)
+        end
         love.graphics.setFont(Battlefont)
         love.graphics.print(self.hpup, self.xpos + 90, self.ypos - 30) -- Draw offsetted hp increase amount above and to the right of member's head
         love.graphics.setColor(1,1,1,1)
