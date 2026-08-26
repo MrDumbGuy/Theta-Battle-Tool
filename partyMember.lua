@@ -115,7 +115,7 @@ function PartyMember:attack(local_enemy, mult, enemies)
     if local_enemy then
         print(self.name.." attacked enemy "..selectedEnemyIndex)
         local_enemy:hurt(self.ATK*mult)
-        self.currentanimation = 1
+        self.currentanimation = "attack"
         self.currentframecount = 1
     else
         print("No enemies left :)")
@@ -126,7 +126,7 @@ end
 function PartyMember:update(dt)
     if current_state == "BATTLEUI" and self.isdefending then
         self.isdefending = false
-        self:set_animation(0)
+        self:set_animation("idle")
     end
     AnimateQuadrants(self, dt, self.animationSpecialLoops)
 end
@@ -134,7 +134,7 @@ end
 function PartyMember:act(local_enemy, actname, ui)
     print(self.name.." acted together with "..local_enemy.name)
     print("Current act: "..actname)
-    self:set_animation(2)
+    self:set_animation("act")
     local_enemy.mercyup = local_enemy.mercytable[actname]
     local_enemy:act(actname, ui) --Lets local_enemy handle the act
 end

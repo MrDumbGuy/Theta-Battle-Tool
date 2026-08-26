@@ -93,6 +93,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     --Enemy related data
     local mizzle_anims = {
+        --These will remain as numbers, as the in-class code relies on numeric keys.
         [0] = {name = "mizzleIdle", length = 5, FPS = 5, looping = true, xOffset = 0, yOffset = 0},
         [1] = {name = "mizzleIdlePink", length = 5, FPS = 5, looping = true, xOffset = 0, yOffset = -0.3},
         [2] = {name = "mizzleAlarm", length = 10, FPS = 10, looping = true, xOffset = 0, yOffset = 0},
