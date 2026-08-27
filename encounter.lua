@@ -159,7 +159,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.items = {
         [1] = Item("70cm Zurna", 180),
         [2] = Item("Ayran", 80),
-        [3] = Item("S. POISON", -100),
+        [3] = Item("S. POISON", -200),
     }
 
     self.ItemSubArray = {

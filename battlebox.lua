@@ -43,29 +43,29 @@ function Battlebox:new()
             local localquad = self.spritesheetarray.frames["BBS_00"..i..".png"].frame
             self.quadrants["opening"][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
             self.quadrantoffsets["opening"][i] = {}
-            self.quadrantoffsets["opening"][i].w = (361 - localquad.w)/2
-            self.quadrantoffsets["opening"][i].h = (363 - localquad.h)/2
+            self.quadrantoffsets["opening"][i].w = (361 - localquad.w)/2 -38
+            self.quadrantoffsets["opening"][i].h = (363 - localquad.h)/2 -38
         else
             local localquad = self.spritesheetarray.frames["BBS_000"..i..".png"].frame
             self.quadrants["opening"][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
             self.quadrantoffsets["opening"][i] = {}
-            self.quadrantoffsets["opening"][i].w = (361 - localquad.w)/2
-            self.quadrantoffsets["opening"][i].h = (363 - localquad.h)/2
+            self.quadrantoffsets["opening"][i].w = (361 - localquad.w)/2 -38
+            self.quadrantoffsets["opening"][i].h = (363 - localquad.h)/2 -38
         end
     end
 
     local localquad = self.spritesheetarray.frames["BBS_0017.png"].frame
-    self.quadrants["open"][1] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
-    self.quadrantoffsets["open"][1] = {}
-    self.quadrantoffsets["open"][1].w = (361 - localquad.w)/2
-    self.quadrantoffsets["open"][1].h = (363 - localquad.h)/2
+    self.quadrants["still"][1] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
+    self.quadrantoffsets["still"][1] = {}
+    self.quadrantoffsets["still"][1].w = (361 - localquad.w)/2 -38
+    self.quadrantoffsets["still"][1].h = (363 - localquad.h)/2 -38
 
     for i = 1, 28 do
         localquad = self.spritesheetarray.frames["BBS_00"..(i+17)..".png"].frame
         self.quadrants["closing"][i] = love.graphics.newQuad(localquad.x, localquad.y, localquad.w, localquad.h, sheetwidth, sheetheight)
         self.quadrantoffsets["closing"][i] = {}
-        self.quadrantoffsets["closing"][i].w = (361 - localquad.w)/2
-        self.quadrantoffsets["closing"][i].h = (361 - localquad.h)/2
+        self.quadrantoffsets["closing"][i].w = (361 - localquad.w)/2 -38
+        self.quadrantoffsets["closing"][i].h = (361 - localquad.h)/2 -38
     end
 
     localquad = self.spritesheetarray.frames["BBS_0046.png"].frame
@@ -87,10 +87,7 @@ function Battlebox:new()
 end
 
 function Battlebox:draw()
-    if self.currentquadrant
-    and self.currentanimation
-    and self.currentframecount
-    and self.quadrantoffsets[self.currentanimation] then
+    if self.currentquadrant and self.currentanimation and self.currentframecount and self.quadrantoffsets[self.currentanimation] then
         if self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)] then
             love.graphics.draw(self.spritesheet, self.currentquadrant, self.left + self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)].w, self.top + self.quadrantoffsets[self.currentanimation][math.floor(self.currentframecount)].h)
         end

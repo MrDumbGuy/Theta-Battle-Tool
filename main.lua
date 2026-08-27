@@ -42,8 +42,6 @@ SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 
 selected_enemy = nil
 
-local SplashScreen = love.graphics.newImage("sprites/ThetaBattleTool-Titlecard.png")
-local SplashSong = love.audio.newSource("music/flowery.ogg", "stream")
 --Just in case I add a menu for changing battles or something.
 local battling
 
@@ -57,6 +55,10 @@ local actindex
 
 --Arrays used for submenus:
 local selected_enemies
+
+--Splashscreen stuff goes here
+local SplashScreen = love.graphics.newImage("sprites/ThetaBattleTool-Titlecard.png")
+local SplashSong = love.audio.newSource("music/flowery.ogg", "stream")
 
 --[[
     Although you can, I'd advise against placing anything battle-specific here.

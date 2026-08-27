@@ -104,7 +104,7 @@ end
 function Controller:handleDowned()
     if self.battle.party_members[self:getPartyMember()] == nil or self:getPartyMember() > #self.battle.party_members then return end
     if self.battle.party_members[self:getPartyMember()].hp <= 0 then
-        while self.battle.party_members[self:getPartyMember()].hp <= 0 and self:getPartyMember() <= #self.battle.party_members + 1 do
+        while self.battle.party_members[self:getPartyMember()].hp <= 0 and self:getPartyMember() < #self.battle.party_members + 1 do
             self:setPartyMember(self:getPartyMember() + 1)
         end
     end
