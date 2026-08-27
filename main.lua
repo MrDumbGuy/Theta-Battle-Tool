@@ -219,8 +219,32 @@ local function ExecuteCommands()
 
     print("ExecuteCommands()")
 
-    local CommandReturned
     Controller:setPartyMember(Controller:getPartyMember() + 1)
+
+    local isMemberDowned
+    if Controller.battle.party_members[Controller:getPartyMember()] then
+        isMemberDowned = Controller.battle.party_members[Controller:getPartyMember()].hp <= 0
+    end
+
+    if isMemberDowned then
+        if Controller:getPartyMember() == #Controller.battle.party_members then
+            if #members_to_attack > 0 then
+
+            Controller:setPartyMember(1)
+
+            for i = 1, #Controller.battle.party_members do
+                Controller.battle.UIs[i]:subtext("")
+            end
+            Controller:setState("ATTACKING")
+            ExecuteAttack()
+            return
+        else
+            Controller.doneNavigating = true
+            StartBULLETS()
+            return
+        end
+        end
+    end
 
     print("Controller:getPartyMember() @ COMMANDS: "..Controller:getPartyMember())
 
@@ -228,16 +252,21 @@ local function ExecuteCommands()
         if Controller:getCommand(Controller:getPartyMember(), 1) then --TODO Ensure that the Command for a downed partyMember is empty.
             Controller.battle.UIs[Controller:getPartyMember()]:subtext(Controller:getCommand(Controller:getPartyMember(),2))
             CommandReturned = Controller:runCommand(Controller:getPartyMember(), 1)
-            if CommandReturned then print("Command executed: "..CommandReturned.." by: "..Controller.battle.party_members[Controller:getPartyMember()].name) end
+            if CommandReturned then
+                print("Command executed: "..CommandReturned.." by: "..Controller.battle.party_members[Controller:getPartyMember()].name)
+            end
         end
     end
     if CommandReturned == "DEFCOMMAND" then
         Controller.battle.party_members[Controller:getPartyMember()].isdefending = true
+        print("Member defended! Now running Executecommands()")
         ExecuteCommands()
+        return
     elseif CommandReturned == "ATTACKCOMMAND" then
         members_to_attack[#members_to_attack+1] = Controller.battle.party_members[Controller:getPartyMember()]
         print("Latest member to attack: "..members_to_attack[#members_to_attack].name)
         ExecuteCommands()
+        return
     end
 
     if Controller:getPartyMember() >= #Controller.battle.party_members + 1 then
@@ -257,9 +286,11 @@ local function ExecuteCommands()
             end
             Controller:setState("ATTACKING")
             ExecuteAttack()
+            return
         else
             Controller.doneNavigating = true
             StartBULLETS()
+            return
         end
 
     end
@@ -299,12 +330,13 @@ function love.keypressed(key)
             print("Party Member:"..Controller:getPartyMember())
         end
 
-        --This has to run after  the above to prevent misfires.
+        --This has to run after the above to prevent misfires.
+        local remainingDowned --bool. if all remaining party_members are downed, true.
 
-        selected_enemies, enemies_to_attack, actname, actindex = Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname, actindex)
+        selected_enemies, enemies_to_attack, actname, actindex, remainingDowned = Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname, actindex)
 
         --Go back to the Battle UI or move on to executing every command?
-        if Controller.doneNavigating and Controller:getPartyMember() > #Controller.battle.party_members then
+        if (Controller.doneNavigating and Controller:getPartyMember() > #Controller.battle.party_members) or remainingDowned then
             Controller:setPartyMember(0)
             Controller:setState("COMMANDS")
             ExecuteCommands()

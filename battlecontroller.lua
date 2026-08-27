@@ -85,7 +85,10 @@ function Controller:BULLETSCleanup() --Self-explanotory.
         if self.battle.party_members[i].hp > 0 and self:getState() == "BULLETS" then self.battle.party_members[i]:set_animation("idle") end
         self.battle.UIs[i]:subtext("* A wild battle commentary appeared!")
         self.battle.UIs[i].buttonmode = 1
+        self:setCommand(i, 1, nil)
+        self:setCommand(i, 2, nil)
     end
+    self.doneNavigating = false
     self:setState("BATTLEUI")
 end
 
@@ -102,12 +105,17 @@ function Controller:getCommand(partymemberindex, n) --Check the command type or 
 end
 
 function Controller:handleDowned()
-    if self.battle.party_members[self:getPartyMember()] == nil or self:getPartyMember() > #self.battle.party_members then return end
+    local remainingDowned = false
+    if (not self.battle.party_members[self:getPartyMember()]) or self:getPartyMember() > #self.battle.party_members then return end
     if self.battle.party_members[self:getPartyMember()].hp <= 0 then
         while self.battle.party_members[self:getPartyMember()].hp <= 0 and self:getPartyMember() < #self.battle.party_members + 1 do
+            self:setCommand(self:getPartyMember(), 1, nil)
+            self:setCommand(self:getPartyMember(), 2, nil)
             self:setPartyMember(self:getPartyMember() + 1)
+            if (not self.battle.party_members[self:getPartyMember()]) or self:getPartyMember() > #self.battle.party_members then remainingDowned = true break end
         end
     end
+    return remainingDowned --Are all remaining party_members Downed?
 end
 
 
@@ -169,7 +177,6 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
                 self.doneNavigating = true
                 self:setPartyMember(self:getPartyMember() + 1)
 
-                self:handleDowned()
             end
 
         end
@@ -196,8 +203,6 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self:setCommand(self:getPartyMember(), 2, "* "..self.battle.party_members[self:getPartyMember()].name.." attacked "..selected_enemy.name.."!") --Not displayed, necessary for regular flow of program.
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
-
-            self:handleDowned()
 
         elseif key == "left" then
             Sole:updatePos(-1)
@@ -251,8 +256,6 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
 
-            self:handleDowned()
-
         elseif key == "left" then
             Sole:updatePos(-1)
         elseif key == "right" then
@@ -300,8 +303,6 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
 
-            self:handleDowned()
-
         elseif key == "left" then
             Sole:updatePos(-1)
         elseif key == "right" then
@@ -337,8 +338,6 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
             self.doneNavigating = true
             self:setPartyMember(self:getPartyMember() + 1)
 
-            self:handleDowned()
-
         elseif key == "left" then
             Sole:updatePos(-1)
         elseif key == "right" then
@@ -346,7 +345,9 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
         end
     end
 
-    return selected_enemies, enemies_to_attack, actname, actindex
+    local remainingDowned = self:handleDowned()
+
+    return selected_enemies, enemies_to_attack, actname, actindex, remainingDowned
 end
 
 return Controller
