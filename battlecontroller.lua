@@ -52,6 +52,8 @@ function Controller:drawForeground()
 
     self.battle.Box:draw()
 
+    --BulletManager:draw(self:getState())
+
 end
 
 function Controller:update(dt)
@@ -70,6 +72,8 @@ function Controller:update(dt)
     Sole:update(dt, self:getState())
 
     self.battle.Box:update(dt)
+
+    --BulletManager:update(dt, self:getState())
 
     --print(love.mouse.getX().." , "..love.mouse.getY()) --I use this when checking positions in the UI.
 

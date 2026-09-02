@@ -34,7 +34,7 @@ end
 
 --Update bullet related information via the bullet pattern function at the current index.
 function BulletManager:applyPattern(dt)
-    self.bullets = self.bulletpatterns[self.currentbulletpattern](self, dt)
+    self.bulletpatterns[self.currentbulletpattern](self, dt)
 end
 
 function BulletManager:draw(current_state)
@@ -54,11 +54,11 @@ function BulletManager:update(dt, current_state)
 
             if self.bullets.isactive[i] then
 
-                self.bullets.velocity_x[i] = self.bullets.velocity_x[i] + self.bullets.accel_x[i]
-                self.bullets.velocity_y[i] = self.bullets.velocity_y[i] + self.bullets.accel_y[i]
+                self.bullets.velocity_x[i] = self.bullets.velocity_x[i] + (self.bullets.accel_x[i] * dt)
+                self.bullets.velocity_y[i] = self.bullets.velocity_y[i] + (self.bullets.accel_y[i] * dt)
 
-                self.bullets.x[i] = self.bullets.x[i] + self.bullets.velocity_x[i]
-                self.bullets.y[i] = self.bullets.y[i] + self.bullets.velocity_y[i]
+                self.bullets.x[i] = self.bullets.x[i] + (self.bullets.velocity_x[i] * dt)
+                self.bullets.y[i] = self.bullets.y[i] + (self.bullets.velocity_y[i] * dt)
 
             end
 
