@@ -1,9 +1,9 @@
-require "encounter"
-
 local Controller = {}
+local BulletManager = require "bulletmanager"
 
 function Controller:load()
     self.battle = Encounter()
+    --BulletManager:load(self.battle.spritesheet, self.battle.spritequadrants, self.battle.bulletpatterns)
     self.current_state = "BATTLEUI"
     self.Commands = {}
     self.doneNavigating = false
