@@ -138,6 +138,37 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
         elseif key == "left" then
             self.battle.UIs[self:getPartyMember()]:changeselect(-1)
         elseif key == "x" and self:getPartyMember() ~= 1 then
+
+            if self.battle.party_members[self:getPartyMember()-1].hp <= 0 then --Block switching back to a downed party member.
+                local cantDecrease = true
+                local viableID = nil
+                for i = 1, #self.battle.party_members do
+                    if self.battle.party_members[i].hp > 0 then
+                        cantDecrease = false
+                        viableID = i
+                        break
+                    end
+                end
+
+
+                if cantDecrease then
+                    return selected_enemies, enemies_to_attack, actname, actindex, nil
+                else
+                    if self:runCommand(viableID, 1) == "ITEMCOMMAND" then --Check whether to 
+                        self.battle.ItemManager:undoAddition()
+                    end
+                    self:setCommand(self:getPartyMember(), 1, nil)
+                    self:setCommand(self:getPartyMember(), 2, nil)
+                    self.battle.UIs[viableID]:subtext("* A wild battle commentary appeared!")
+                    self.battle.UIs[viableID]:menuState(Sole, 0, 0, "BATTLEUI", {})
+                    self.battle.party_members[viableID]:set_animation("idle")
+                    love.audio.play(SND_SELECT)
+                    self:setPartyMember(viableID)
+                    return selected_enemies, enemies_to_attack, actname, actindex, nil
+                end
+
+            end
+
             if self:runCommand(self:getPartyMember()-1, 1) == "ITEMCOMMAND" then
                 self.battle.ItemManager:undoAddition()
             end
@@ -195,7 +226,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             selected_enemy = self.battle.enemies[Sole.currentmenuposition]
-            selected_enemies[self:getPartyMember()] = self.battle.enemies[Sole.currentmenuposition]
+            selected_enemies[self:getPartyMember()] = selected_enemy
 
             enemies_to_attack[#enemies_to_attack+1] = selected_enemy
             self:setCommand(self:getPartyMember(), 1,
@@ -223,7 +254,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             selected_enemy = self.battle.enemies[Sole.currentmenuposition]
-            selected_enemies[self:getPartyMember()] = self.battle.enemies[Sole.currentmenuposition]
+            selected_enemies[self:getPartyMember()] = selected_enemy
             self.battle.UIs[self:getPartyMember()]:menuState(Sole, 0, 0, "ACTSUBSUB", self.battle.act_sub_subs[selected_enemy])
             Sole:updatePosArray(self.battle.act_sub_subs[selected_enemy])
         elseif key == "left" then
@@ -322,7 +353,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
         elseif key == "z" then
             love.audio.play(SND_SELECT)
             selected_enemy = self.battle.enemies[Sole.currentmenuposition]
-            selected_enemies[self:getPartyMember()] = self.battle.enemies[Sole.currentmenuposition]
+            selected_enemies[self:getPartyMember()] = selected_enemy
             print(selected_enemies[self:getPartyMember()].name.." added to queue to be spared.")
 
             self:setCommand(self:getPartyMember(), 1,

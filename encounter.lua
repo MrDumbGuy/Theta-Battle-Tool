@@ -57,15 +57,19 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         "DEFEND",
     }
 
-    local kris_1 = PartyMember("Kris1", 100, 202, kris_button_states, kris_anims, "krisplace.png", "idle", krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
+    local kris_1 = PartyMember("Kris1", 100, 52, kris_button_states, kris_anims, "krisplace.png", "idle", krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
     kris_1:set_animation("attack")
 
-    local kris_2 = PartyMember("Kris2", 100, 402, kris_button_states, kris_anims, "krisplace.png", "idle", krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
+    local kris_2 = PartyMember("Kris2", 100, 252, kris_button_states, kris_anims, "krisplace.png", "idle", krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
     kris_2:set_animation("attack")
+
+    local kris_3 = PartyMember("Kris3", 100, 452, kris_button_states, kris_anims, "krisplace.png", "idle", krisSpecialLoops, krissheetarr, krissheet, 4, 200, 35, 10)
+    kris_3:set_animation("attack")
 
     self.party_members = {
         kris_1,
         kris_2,
+        kris_3,
     }
 
     --Load BattleUi sheet and data
@@ -79,14 +83,14 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         sheetjson:close()
     end
 
-    local Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 308, 630, 1, BattleUISheet, BattleSheetQuadrantData)
-    local Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 628, 630, 2, BattleUISheet, BattleSheetQuadrantData)
-
+    local Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 118, 630, 1, BattleUISheet, BattleSheetQuadrantData)
+    local Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 438, 630, 2, BattleUISheet, BattleSheetQuadrantData)
+    local Kris3UI = BattleUi("Kris3", "kris", "kris", kris_buttons, 760, 630, 3, BattleUISheet, BattleSheetQuadrantData)
     self.UIs = {
         Kris1UI,
         Kris2UI,
+        Kris3UI,
     }
-
 
     --Background
     self.Bg = Background("b")
@@ -152,7 +156,8 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     self.PartyMemberSubArray = {
         [1] = {"* "..self.party_members[1].name, 218, 771},
-        [2] = {"* "..self.party_members[2].name, 778, 771}
+        [2] = {"* "..self.party_members[2].name, 778, 771},
+        [3] = {"* "..self.party_members[3].name, 218, 851},
     }
     self.PartyMemberSub = Submenu(self.PartyMemberSubArray, {"MEMBERUI"}, nil, false)
 

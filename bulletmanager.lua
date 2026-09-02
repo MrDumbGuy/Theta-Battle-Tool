@@ -50,7 +50,7 @@ function BulletManager:update(dt, current_state)
         self:applyPattern(dt)
 
         if not self.bullets.custombulletpositions then
-        for i = 1, #self.bullets.isactive do
+        for i = #self.bullets.isactive, 1, -1 do
 
             if self.bullets.isactive[i] then
 

@@ -136,8 +136,15 @@ local function BULLETSCleanup()
     Controller.battle.Box:set_animation("closing")
     Sole:updateLimits(Controller.battle.Box)
 
-    --Collect garbage and reset to first party member.
-    Controller:setPartyMember(1)
+    --Collect garbage and reset to first non-downed party member. If all are downed, set to 1 and trigger BATTLEOVER with a "You Lost" subtext.
+    
+    for i = 1, #Controller.battle.party_members do
+        if Controller.battle.party_members[i].hp > 0 then
+            Controller:setPartyMember(i)
+            break
+        end
+    end
+
     selected_enemies = {}
     actname = {}
     actindex = {}
@@ -215,6 +222,8 @@ end
 
 local function ExecuteCommands()
 
+    local CommandReturned = nil
+
     Controller:setState("COMMANDS")
 
     print("ExecuteCommands()")
@@ -256,17 +265,17 @@ local function ExecuteCommands()
                 print("Command executed: "..CommandReturned.." by: "..Controller.battle.party_members[Controller:getPartyMember()].name)
             end
         end
-    end
-    if CommandReturned == "DEFCOMMAND" then
-        Controller.battle.party_members[Controller:getPartyMember()].isdefending = true
-        print("Member defended! Now running Executecommands()")
-        ExecuteCommands()
-        return
-    elseif CommandReturned == "ATTACKCOMMAND" then
-        members_to_attack[#members_to_attack+1] = Controller.battle.party_members[Controller:getPartyMember()]
-        print("Latest member to attack: "..members_to_attack[#members_to_attack].name)
-        ExecuteCommands()
-        return
+        if CommandReturned == "DEFCOMMAND" then
+            Controller.battle.party_members[Controller:getPartyMember()].isdefending = true
+            print("Member defended! Now running Executecommands()")
+            ExecuteCommands()
+            return
+        elseif CommandReturned == "ATTACKCOMMAND" then
+            members_to_attack[#members_to_attack+1] = Controller.battle.party_members[Controller:getPartyMember()]
+            print("Latest member to attack: "..members_to_attack[#members_to_attack].name)
+            ExecuteCommands()
+            return
+        end
     end
 
     if Controller:getPartyMember() >= #Controller.battle.party_members + 1 then
