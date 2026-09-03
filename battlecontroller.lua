@@ -96,6 +96,13 @@ function Controller:BULLETSCleanup() --Self-explanotory.
     self:setState("BATTLEUI")
 end
 
+function Controller:BATTLEOVER()
+    for i = 1, #self.battle.party_members do
+        self.battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit.")
+        self.battle.party_members[i]:set_animation("end")
+    end
+end
+
 function Controller:setCommand(partymemberindex, n, misc)
     self.Commands[partymemberindex][n] = misc
 end

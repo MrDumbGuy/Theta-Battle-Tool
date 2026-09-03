@@ -115,12 +115,7 @@ function love.update(dt)
 
         if battleovercheck then
             Controller:setState("BATTLEOVER")
-        end
-
-        if Controller:getState() == "BATTLEOVER" then
-            for i = 1, #Controller.battle.party_members do
-                Controller.battle.UIs[i]:subtext("* Battle is over!\n* Press any key to exit.")
-            end
+            Controller:BATTLEOVER()
             Sole:updatePosArray(nil)
         end
     else
@@ -137,7 +132,7 @@ local function BULLETSCleanup()
     Sole:updateLimits(Controller.battle.Box)
 
     --Collect garbage and reset to first non-downed party member. If all are downed, set to 1 and trigger BATTLEOVER with a "You Lost" subtext.
-    
+
     for i = 1, #Controller.battle.party_members do
         if Controller.battle.party_members[i].hp > 0 then
             Controller:setPartyMember(i)

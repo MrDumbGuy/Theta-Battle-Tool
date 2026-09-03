@@ -40,8 +40,7 @@ function PartyMember:new(name, xpos, ypos, arr_button_states, animations, defaul
 
     end
 
-    local defaultfilename = defaultquadrant
-    local defaultquaddata = spritesheetarray.frames[defaultfilename]
+    local defaultquaddata = spritesheetarray.frames[defaultquadrant]
 
     self.defaultquadrant = love.graphics.newQuad(defaultquaddata.frame.x, defaultquaddata.frame.y, defaultquaddata.frame.w, defaultquaddata.frame.h, sheetwidth, sheetheight)
 
@@ -147,11 +146,17 @@ function PartyMember:spare(local_enemy)
     local_enemy:spared()
 end
 
-function PartyMember:hpUp(hp)
-    self.hpup = hp
-    self.hp = self.hp + hp
+function PartyMember:hpUp(hpup)
+    self.hpup = hpup
+    self.hp = self.hp + hpup
     if self.hp > self.maxhp then
         self.hp = self.maxhp
         self.hpup = "MAX"
+    elseif self.hpup < 0 then
+        self:set_animation("hurt")
+        if self.hp <= 0 then
+            self.hp = 0
+            tick.delay(function() self:set_animation("down") end, 1)
+        end
     end
 end

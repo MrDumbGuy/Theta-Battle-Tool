@@ -11,7 +11,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     local kris_anims = {
 
         --These used to be number-indexed. They are now string-indexed for clarity.
-        --The animations of these 10 specific keys still need to exist for all party members.
+        --The animations of these specific keys still need to exist for all party members.
         --(Not the names)
 
         ["idle"] = {name = "krisIdle", length = 6, FPS = 6, looping = true, xOffset = 0, yOffset = 0},
@@ -20,6 +20,10 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         ["item"] = {name = "krisItem", length = 8, FPS = 12, looping = false, xOffset = -21, yOffset = -15},
         ["spare"] = {name = "krisAct", length = 11, FPS = 11, looping = false, xOffset = 0, yOffset = 0}, --I'm fairly confident that Kris uses the same animation for sparing and acting.
         ["defend"] = {name = "krisDefend", length = 6, FPS = 12, looping = false, xOffset = 0, yOffset = -7},
+        ["hurt"] = {name = "krisHurt", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -20},
+        ["down"] = {name = "krisDown", length = 1, FPS = 1, looping = true, xOffset = -60, yOffset = -20},
+        ["end"] = {name = "krisEnd", length = 9, FPS = 10, looping = false, xOffset = -48, yOffset = -24},
+        ["endloop"] = {name = "krisEndLoop", length = 1, FPS = 1, looping = true, xOffset = -48, yOffset = -24},
         ["ATTACKUI"] = {name = "krisAttackWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = -20},
         ["ACTUI"] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0},
         ["SPAREUI"] = {name = "krisActWait", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0}, --Again, sparing is visually the same as acting. 
@@ -38,6 +42,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
 
     local krisSpecialLoops = {
         ["defend"] = "DEFEND",
+        ["end"] = "endloop"
     }
 
     local krissheet = love.graphics.newImage("sprites/krissheet.png")
