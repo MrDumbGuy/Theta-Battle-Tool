@@ -120,6 +120,7 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         local tempmizzlearr = mizzlejson:read("*a")
         mizzlearr = json.decode(tempmizzlearr)
     end
+    mizzlejson:close()
 
     self.enemies = {}
 
