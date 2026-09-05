@@ -154,8 +154,8 @@ function PartyMember:hpUp(hpup)
         self.hpup = "MAX"
     elseif self.hpup < 0 then
         self:set_animation("hurt")
+        tick.delay(function() love.audio.play(SND_HURT) end, 1)
         if self.hp <= 0 then
-            self.hp = 0
             tick.delay(function() self:set_animation("down") end, 1)
         end
     end

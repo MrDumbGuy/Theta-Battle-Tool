@@ -37,6 +37,7 @@ HPfont = love.graphics.newFont("fonts/deltarune-hp-font.otf", 14)
 SND_MENUMOVE = love.audio.newSource("sfx/snd_menumove.wav", "static")
 SND_SELECT = love.audio.newSource("sfx/snd_select.wav", "static")
 SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
+SND_HURT = love.audio.newSource("sfx/snd_hurt1.wav", "static")
 
 --Place state-tracking variables here
 
@@ -132,12 +133,18 @@ local function BULLETSCleanup()
     Sole:updateLimits(Controller.battle.Box)
 
     --Collect garbage and reset to first non-downed party member. If all are downed, set to 1 and trigger BATTLEOVER with a "You Lost" subtext.
-
+    local noOneLeft = true
     for i = 1, #Controller.battle.party_members do
         if Controller.battle.party_members[i].hp > 0 then
             Controller:setPartyMember(i)
+            noOneLeft = false
             break
         end
+    end
+
+    if noOneLeft then
+        Controller:BATTLEOVER()
+        Controller:setState("BATTLEOVER")
     end
 
     selected_enemies = {}
