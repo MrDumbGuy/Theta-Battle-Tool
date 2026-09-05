@@ -101,6 +101,8 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.Bg = Background("b")
 
     --Enemy related data
+
+    --Example enemy data for a Mizzle.
     local mizzle_anims = {
         --These will remain as numbers, as the in-class code relies on numeric keys.
         [0] = {name = "mizzleIdle", length = 5, FPS = 5, looping = true, xOffset = 0, yOffset = 0},
@@ -124,6 +126,18 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     self.enemies[1] = Mizzle("Mizzr", 980, 102, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
     self.enemies[2] = Mizzle("Mizzy", 980, 252, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
     self.enemies[3] = Mizzle("Mizzle", 980, 402, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
+
+    --Load your bullet sheet paths and bullet patterns here! They get passed on to the BulletManager, which handles the rest.
+    self.bulletSheetPath = "sprites/mizzlebullets.png"
+    self.bulletSheetDataPath = "sprites/mizzlebullets.json"
+
+    --Each bullet pattern is a function that takes the BulletManager and dt as arguments.
+    --They update BulletManager.bullets with either the new positions of the bullets or the new velocities of the bullets.
+    --Custom velocities => Set BulletManager.bullets.custombulletpositions to false in your pattern function.
+    --Otherwise, set it to true and add your custom movement information (you can still use BulletManager.bullets table!)
+    self.bulletPatterns = {
+        [1] = require "mizzlebulletpattern"
+    }
 
     --Submenus and their options
     --These get used to generate the submenus' text and their positions

@@ -3,7 +3,7 @@ local BulletManager = require "bulletmanager"
 
 function Controller:load()
     self.battle = Encounter()
-    --BulletManager:load(self.battle.spritesheet, self.battle.spritequadrants, self.battle.bulletpatterns)
+    BulletManager:load(self.battle.bulletSheetPath, self.battle.bulletSheetDataPath, self.battle.bulletPatterns)
     self.current_state = "BATTLEUI"
     self.Commands = {}
     self.doneNavigating = false
@@ -52,7 +52,7 @@ function Controller:drawForeground()
 
     self.battle.Box:draw()
 
-    --BulletManager:draw(self:getState())
+    BulletManager:draw(self:getState())
 
 end
 
@@ -73,7 +73,7 @@ function Controller:update(dt)
 
     self.battle.Box:update(dt)
 
-    --BulletManager:update(dt, self:getState())
+    BulletManager:update(dt, self:getState())
 
     --print(love.mouse.getX().." , "..love.mouse.getY()) --I use this when checking positions in the UI.
 
