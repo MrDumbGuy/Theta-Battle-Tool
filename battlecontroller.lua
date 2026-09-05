@@ -99,7 +99,7 @@ end
 function Controller:BATTLEOVER()
     local noOneLeft = true
     
-    for __, member in self.battle.party_members do
+    for __, member in pairs(self.battle.party_members) do
         if member.hp > 0 then
             noOneLeft = false
             break
@@ -107,15 +107,15 @@ function Controller:BATTLEOVER()
     end
 
     if noOneLeft then
-        for __, UI in self.battle.UIs do
+        for __, UI in pairs(self.battle.UIs) do
             UI:subtext("* Battle is over, you lost!\n* Press any key to exit.")
         end
     else
-        for __, member in self.battle.party_members do
+        for __, member in pairs(self.battle.party_members) do
             if member.hp <= 0 then member.hp = 1 end
             member:set_animation("end")
         end
-        for __, UI in self.battle.UIs do
+        for __, UI in pairs(self.battle.UIs) do
             UI:subtext("* Battle is over, you win!\n* Press any key to exit.")
         end
     end

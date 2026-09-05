@@ -1,0 +1,36 @@
+{"frames": {
+
+"eye.png":
+{
+	"frame": {"x":0,"y":0,"w":22,"h":14},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":22,"h":14},
+	"sourceSize": {"w":22,"h":14}
+},
+"horizontalDrop.png":
+{
+	"frame": {"x":0,"y":14,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"verticalDrop.png":
+{
+	"frame": {"x":0,"y":46,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "mizzlebullets.png",
+	"format": "RGBA8888",
+	"size": {"w":32,"h":70},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:728a55e79049dff032715726b2db447c:ab2f1a7eaef02cd14bdbb8a608ebdfe2:96b40af0169e07a4872515647337db67$"
+}
+}
