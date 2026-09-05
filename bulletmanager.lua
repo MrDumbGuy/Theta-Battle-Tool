@@ -31,6 +31,7 @@ function BulletManager:load(spritesheet, spritequadrants, bulletpatterns)
         local tempquadrantarr = quadrantjson:read("*a")
         quadrantarray = json.decode(tempquadrantarr)
     end
+    quadrantjson:close()
 
     local sheetwidth, sheetheight = quadrantarray.meta.size.w, quadrantarray.meta.size.h
 
