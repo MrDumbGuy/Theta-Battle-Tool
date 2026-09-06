@@ -2,7 +2,7 @@ local Controller = {}
 local BulletManager = require "bulletmanager"
 
 function Controller:load()
-    self.battle = Encounter()
+    self.battle = require "encounter"
     BulletManager:load(self.battle.bulletSheetPath, self.battle.bulletSheetDataPath, self.battle.bulletPatterns)
     self.current_state = "BATTLEUI"
     self.Commands = {}
@@ -98,7 +98,7 @@ end
 
 function Controller:BATTLEOVER()
     local noOneLeft = true
-    
+
     for __, member in pairs(self.battle.party_members) do
         if member.hp > 0 then
             noOneLeft = false

@@ -1,3 +1,4 @@
+if os.getenv("LOVE2D_TOOLS") then pcall(require, "_love2d_tools_bridge") end
 Object = require "classic"
 require "partyMember"
 require "background"
@@ -9,7 +10,6 @@ require "battlebox"
 flux = require "flux"
 tick = require "tick"
 json = require "json"
-require "encounter"
 local tlfres = require "tlfres"
 require "item"
 require "itemmanager"
@@ -39,6 +39,13 @@ SND_SELECT = love.audio.newSource("sfx/snd_select.wav", "static")
 SND_ATTACK = love.audio.newSource("sfx/snd_attack.wav", "static")
 SND_HURT = love.audio.newSource("sfx/snd_hurt1.wav", "static")
 
+--Load certain feedback sprites
+LOST = love.graphics.newImage("sprites/LOST.png")
+RECRUIT = love.graphics.newImage("sprites/RECRUIT.png")
+
+--The very culmination of your being ;)
+Sole = Soul() --It's named "Sole" because the object name cannot be the class name.
+
 --Place state-tracking variables here
 
 selected_enemy = nil
@@ -61,6 +68,8 @@ local selected_enemies
 local SplashScreen = love.graphics.newImage("sprites/ThetaBattleTool-Titlecard.png")
 local SplashSong = love.audio.newSource("music/flowery.ogg", "stream")
 
+--used to detect the manually typed out game name.
+local typedName = ""
 --[[
     Although you can, I'd advise against placing anything battle-specific here.
     That kind of defeats the point of having made an engine instead of a messily-coded fangame.
@@ -83,8 +92,15 @@ local function startBattle()
     selected_enemies = {}
     SplashSong:stop()
 
-    Controller:load()
-    battling = true
+    local encounterdata = love.filesystem.newFileData("encounters/"..typedName..".zip")
+    assert(encounterdata, "Couldn't find encounters/"..typedName..".zip. Check for typos!")
+    local success = love.filesystem.mount(encounterdata, "", true)
+    assert(success, "Couldn't mount zip.")
+
+    if success then
+        Controller:load()
+        battling = true
+    end
 
 end
 
@@ -103,18 +119,26 @@ function love.update(dt)
 
         flux.update(dt)
 
-        local battleovercheck = true
+        local allenemiesdead = true
 
         for i = 1, #Controller.battle.enemies do
             if Controller.battle.enemies[i] then
                 if Controller.battle.enemies[i].hp > 0 then
-                    battleovercheck = false
+                    allenemiesdead = false
                     break
                 end
             end
         end
 
-        if battleovercheck then
+        local allmembersdead = true
+
+        for i = 1, #Controller.battle.party_members do
+            if Controller.battle.party_members[i].hp > 0 then
+                allmembersdead = false
+            end
+        end
+
+        if allenemiesdead or allmembersdead then
             Controller:setState("BATTLEOVER")
             Controller:BATTLEOVER()
             Sole:updatePosArray(nil)
@@ -361,11 +385,18 @@ function love.keypressed(key)
         end
     else
 
-        if key == "z" then
+        if key == "return" or key == "kpenter" then
             startBattle()
-
+        elseif key == "backspace" and typedName:len() > 0 then
+            typedName = string.sub(typedName, 1, -2)
         end
 
+    end
+end
+
+function love.textinput(text)
+    if not battling and (text ~= "enter" and text ~= "kpenter") then
+        typedName = typedName..text
     end
 end
 
@@ -411,7 +442,10 @@ function love.draw()
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(SplashScreen, 0, 0)
         love.graphics.setFont(Battlefont)
-        love.graphics.print("Press Z to start the battle!", WIDTH/3-50, 700, 0)
+        love.graphics.print(typedName, WIDTH/3-50, 600)
+        love.graphics.setColor(0.165, 0.965, 0.486)
+        love.graphics.print("Type in your BATTLE's name and", WIDTH/3-50, 650)
+        love.graphics.print("Press ENTER to start the battle!", WIDTH/3-50, 700)
         love.graphics.setColor(0.37,1,0.75,1)
         love.graphics.print("TBT (c) SEDAT ARITÜRK 2026", WIDTH/3-50, 750)
         love.graphics.setColor(1,0,0,1)
