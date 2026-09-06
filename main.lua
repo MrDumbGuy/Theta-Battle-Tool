@@ -14,6 +14,11 @@ require "item"
 require "itemmanager"
 Controller = require "battlecontroller" --The battle middle-manager. Intentionally global.
 
+if love.filesystem.isFused() then
+    local dir = love.filesystem.getSourceBaseDirectory()
+    love.filesystem.mount(dir, "", true)
+end
+
 --Best for blurless scaling
 love.graphics.setDefaultFilter( "nearest", "nearest", 1)
 
@@ -91,9 +96,10 @@ local function startBattle()
     selected_enemies = {}
     SplashSong:stop()
 
-    local encounterdata = love.filesystem.newFileData("encounters/"..typedName..".zip")
-    assert(encounterdata, "Couldn't find encounters/"..typedName..".zip. Check for typos!")
-    local success = love.filesystem.mount(encounterdata, "", true)
+    local path = "encounters/"..typedName..".zip"
+    encounterdata, err = love.filesystem.newFileData(path)
+    assert(encounterdata, err)
+    local success = love.filesystem.mount(encounterdata, "mountedbattle", "", true)
     assert(success, "Couldn't mount zip.")
 
     if success then
@@ -357,7 +363,9 @@ function love.keypressed(key)
             ExecuteAttack(Controller.battle.enemies)
 
         elseif Controller:getState() == "BATTLEOVER" then
-            love.event.quit()
+            battling = false
+            Controller.battle.MUS_Battlemusic:pause()
+            love.filesystem.unmount("mountedbattle")
         end
 
         if Controller:getState() ~= "BULLETS" then
