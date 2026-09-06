@@ -450,14 +450,7 @@ function love.draw()
         love.graphics.setColor(1,1,1,1)
         love.graphics.draw(SplashScreen, 0, 0)
         love.graphics.setFont(Battlefont)
-        love.graphics.print(typedName, WIDTH/3-50, 600)
-        love.graphics.setColor(0.165, 0.965, 0.486)
-        love.graphics.print("Type in your BATTLE's name and", WIDTH/3-50, 650)
-        love.graphics.print("Press ENTER to start the battle!", WIDTH/3-50, 700)
-        love.graphics.setColor(0.37,1,0.75,1)
-        love.graphics.print("TBT (c) SEDAT ARITÜRK 2026", WIDTH/3-50, 750)
-        love.graphics.setColor(1,0,0,1)
-        love.graphics.print("SEE README, LICENSE & CREDITS", WIDTH/3-50, 800)
+        love.graphics.print(typedName..".zip", 256, 600)
 
     end
 
