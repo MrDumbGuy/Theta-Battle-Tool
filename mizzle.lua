@@ -4,7 +4,7 @@ require "animate"
 
 Mizzle = Object:extend()
 
-function Mizzle:new(name, x, y, animations, spritesheet, spritesheetarray, defaultanim, size, maxhp)
+function Mizzle:new(name, x, y, animations, defaultanim, size, maxhp)
 
     self.name = name
     self.x = x
@@ -21,7 +21,9 @@ function Mizzle:new(name, x, y, animations, spritesheet, spritesheetarray, defau
     self.currentquadrant = nil
     self.currentframecount = 1
 
-    self.spritesheet = spritesheet
+    self.spritesheet = love.graphics.newImage("sprites/mizzle.png")
+    local spritejson = love.filesystem.read("sprites/mizzle.json")
+    local spritesheetarray = json.decode(spritejson)
 
     self.quadrants = {}
 

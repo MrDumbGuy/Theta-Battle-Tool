@@ -25,12 +25,8 @@ function BulletManager:load(spritesheet, spritequadrants, bulletpatterns)
 
     self.spritequadrants = {}
 
-    local quadrantarray
-    local quadrantjson = io.open(spritequadrants, "r")
-    if quadrantjson then
-        local tempquadrantarr = quadrantjson:read("*a")
-        quadrantarray = json.decode(tempquadrantarr)
-    end
+    local quadrantjson = love.filesystem.read(spritequadrants)
+    local quadrantarray = json.decode(quadrantjson)
 
     local sheetwidth, sheetheight = quadrantarray.meta.size.w, quadrantarray.meta.size.h
 

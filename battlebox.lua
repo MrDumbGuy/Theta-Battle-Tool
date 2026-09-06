@@ -15,12 +15,8 @@ function Battlebox:new()
 
     self.spritesheet = love.graphics.newImage("sprites/battlebox.png")
 
-    local sheetjson = io.open("sprites/battlebox.json", "r")
-    if sheetjson then
-        local sheetarr = sheetjson:read("*a")
-        self.spritesheetarray = json.decode(sheetarr)
-        sheetjson:close()
-    end
+   local sheetarr = love.filesystem.read("sprites/battlebox.json")
+   self.spritesheetarray = json.decode(sheetarr)
 
     self.quadrants = {
         ["opening"] = {},

@@ -46,13 +46,8 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     }
 
     local krissheet = love.graphics.newImage("sprites/krissheet.png")
-    local krissheetarr
-    local krisjson = io.open("sprites/krissheet.json", "r")
-    if krisjson then
-        local tempkrissheetarr = krisjson:read("*a")
-        krissheetarr = json.decode(tempkrissheetarr)
-        krisjson:close()
-    end
+    local krisjson = love.filesystem.read("sprites/krissheet.json")
+    local krissheetarr = json.decode(krisjson)
 
     local kris_button_states = {
         "ATTACKUI",
@@ -80,13 +75,9 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
     --Load BattleUi sheet and data
 
     local BattleUISheet = love.graphics.newImage("sprites/battleUI.png")
-    local BattleSheetQuadrantData
-    local sheetjson = io.open("sprites/battleUI.json", "r")
-    if sheetjson then
-        local tempsheetarr = sheetjson:read("*a")
-        BattleSheetQuadrantData = json.decode(tempsheetarr)
-        sheetjson:close()
-    end
+    local BattleSheetQuadrant = love.filesystem.read("sprites/battleUI.json")
+    local BattleSheetQuadrantData = json.decode(BattleSheetQuadrant)
+    print("cwd"..love.filesystem.getWorkingDirectory())
 
     local Kris1UI = BattleUi("Kris1", "kris", "kris", kris_buttons, 118, 630, 1, BattleUISheet, BattleSheetQuadrantData)
     local Kris2UI = BattleUi("Kris2", "kris", "kris", kris_buttons, 438, 630, 2, BattleUISheet, BattleSheetQuadrantData)
@@ -113,19 +104,11 @@ function Encounter:new() --Called once in love.load(). Initialise all your encou
         [5] = {name = "mizzleHurtPink", length = 1, FPS = 1, looping = true, xOffset = 0, yOffset = 0}
     }
 
-    local mizzlesheet = love.graphics.newImage("sprites/mizzle.png")
-    local mizzlearr
-    local mizzlejson = io.open("sprites/mizzle.json", "r")
-    if mizzlejson then
-        local tempmizzlearr = mizzlejson:read("*a")
-        mizzlearr = json.decode(tempmizzlearr)
-    end
-
     self.enemies = {}
 
-    self.enemies[1] = Mizzle("Mizzr", 980, 102, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
-    self.enemies[2] = Mizzle("Mizzy", 980, 252, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
-    self.enemies[3] = Mizzle("Mizzle", 980, 402, mizzle_anims, mizzlesheet, mizzlearr, 0, 3, 1000)
+    self.enemies[1] = Mizzle("Mizzr", 980, 102, mizzle_anims, 0, 3, 1000)
+    self.enemies[2] = Mizzle("Mizzy", 980, 252, mizzle_anims, 0, 3, 1000)
+    self.enemies[3] = Mizzle("Mizzle", 980, 402, mizzle_anims, 0, 3, 1000)
 
     --Load your bullet sheet paths and bullet patterns here! They get passed on to the BulletManager, which handles the rest.
     self.bulletSheetPath = "sprites/mizzlebullets.png"
