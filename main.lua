@@ -1,4 +1,3 @@
-if os.getenv("LOVE2D_TOOLS") then pcall(require, "_love2d_tools_bridge") end
 Object = require "classic"
 require "partyMember"
 require "background"
@@ -172,6 +171,7 @@ local function BULLETSCleanup()
     end
 
     selected_enemies = {}
+    selected_enemy = nil
     actname = {}
     actindex = {}
     Controller:BULLETSCleanup()
