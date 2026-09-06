@@ -3,7 +3,6 @@ require "partyMember"
 require "background"
 require "battleui"
 require "battlebar"
-require "soul"
 require "submenu"
 require "battlebox"
 flux = require "flux"
@@ -48,7 +47,6 @@ LOST = love.graphics.newImage("sprites/LOST.png")
 RECRUIT = love.graphics.newImage("sprites/RECRUIT.png")
 
 --The very culmination of your being ;)
-Sole = Soul() --It's named "Sole" because the object name cannot be the class name.
 
 --Place state-tracking variables here
 
@@ -154,7 +152,6 @@ function love.update(dt)
         if allenemiesdead or allmembersdead then
             Controller:setState("BATTLEOVER")
             Controller:BATTLEOVER()
-            Sole:updatePosArray(nil)
         end
     else
         if not SplashSong:isPlaying() then
@@ -175,7 +172,6 @@ end
 local function BULLETSCleanup()
 
     Controller.battle.Box:set_animation("closing")
-    Sole:updateLimits(Controller.battle.Box)
 
     --Collect garbage and reset to first non-downed party member. If all are downed, set to 1 and trigger BATTLEOVER with a "You Lost" subtext.
     local noOneLeft = true
@@ -208,13 +204,7 @@ local function StartBULLETS()
         battlebars = {}
         collectgarbage("collect")
 
-        Controller:setPartyMember(1)
-        for i = 1, #Controller.battle.party_members do
-            Controller.battle.UIs[i]:subtext("")
-        end
-        Controller.battle.Box:set_animation("opening")
-        Sole:updateLimits(Controller.battle.Box)
-        Sole:centerInBox()
+        Controller:StartBULLETS()
         tick.delay(function() BULLETSCleanup() end, 5)
         Controller:setState("BULLETS")
 end
@@ -400,10 +390,10 @@ function love.keypressed(key)
             Controller:setPartyMember(0)
             Controller:setState("COMMANDS")
             ExecuteCommands()
-            Sole:updatePosArray(nil)
+            Controller.Soul:updatePosArray(nil)
         elseif Controller.doneNavigating and Controller:getState() ~= "BULLETS" and Controller:getState() ~= "COMMANDS" and Controller:getState() ~= "ATTACKING" then
             Controller.battle.UIs[Controller:getPartyMember()]:subtext("* A wild battle commentary appeared!")
-            Controller.battle.UIs[Controller:getPartyMember()]:menuState(Sole, 0, 0, "BATTLEUI", {})
+            Controller.battle.UIs[Controller:getPartyMember()]:menuState(Controller.Soul, 0, 0, "BATTLEUI", {})
             Controller:setState("BATTLEUI")
             Controller.doneNavigating = false
             selected_enemy = nil
@@ -460,8 +450,6 @@ function love.draw()
         for i = 1, #battlebars do
             battlebars[i]:draw()
         end
-
-        Sole:draw(Controller:getState())
 
     else
         --A primitive title screen. This is just a placeholder 'till I make a better one.

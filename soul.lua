@@ -1,4 +1,4 @@
-Soul = Object:extend()
+local Soul = {}
 
 function Soul:new()
     self.image = love.graphics.newImage("sprites/soul.png")
@@ -12,6 +12,8 @@ function Soul:new()
     self.bottom = 483
     self.left = 500
     self.right = 783
+
+    return self
 end
 
 function Soul:updatePos(delta)
@@ -99,3 +101,5 @@ function Soul:draw(localcurrentstate)
         love.graphics.draw(self.image, self.x, self.y, 0, self.size, self.size)
     end
 end
+
+return Soul:new()
