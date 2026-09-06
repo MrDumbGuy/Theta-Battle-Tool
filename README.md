@@ -26,7 +26,7 @@ Theta Battle Tool is not:
 
 ## Installation
 
-1) Install [LÖVE 11.4](https://love2d.org)
+1) Install [LÖVE 11.5](https://love2d.org)
 2) Download or clone this repository
 3) Open in an IDE of your choice or run the Demo with LÖVE
     - ```love theta-battle-tool```
