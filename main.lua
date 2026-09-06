@@ -54,8 +54,9 @@ Sole = Soul() --It's named "Sole" because the object name cannot be the class na
 
 selected_enemy = nil
 
---Just in case I add a menu for changing battles or something.
+--Variables for main menu tracking!
 local battling
+local errorMountingLastTime
 
 --TODO Move most of these to the Controller object. The Controller is meant to be the middle-manager for the battle, so it should handle most of these variables.
 local members_to_attack
@@ -83,6 +84,7 @@ local typedName = ""
 function love.load()
 
     battling = false
+    errorMountingLastTime = false
 
 end
 
@@ -97,14 +99,19 @@ local function startBattle()
     SplashSong:stop()
 
     local path = "encounters/"..typedName..".zip"
-    encounterdata, err = love.filesystem.newFileData(path)
-    assert(encounterdata, err)
-    local success = love.filesystem.mount(encounterdata, "mountedbattle", "", true)
-    assert(success, "Couldn't mount zip.")
+    local encounterdata, err = love.filesystem.newFileData(path)
+    local filemounted
 
-    if success then
+    if encounterdata then
+        love.filesystem.mount(encounterdata, "mountedbattle", "", true)
+    end
+
+    if encounterdata then
         Controller:load()
         battling = true
+        errorMountingLastTime = false
+    else
+        errorMountingLastTime = true
     end
 
 end
@@ -364,6 +371,7 @@ function love.keypressed(key)
 
         elseif Controller:getState() == "BATTLEOVER" then
             battling = false
+            errorMountingLastTime = false
             Controller.battle.MUS_Battlemusic:pause()
             love.filesystem.unmount("mountedbattle")
         end
@@ -397,6 +405,7 @@ function love.keypressed(key)
             startBattle()
         elseif key == "backspace" and typedName:len() > 0 then
             typedName = string.sub(typedName, 1, -2)
+            if errorMountingLastTime then errorMountingLastTime = false end
         end
 
     end
@@ -405,6 +414,7 @@ end
 function love.textinput(text)
     if not battling and (text ~= "enter" and text ~= "kpenter") then
         typedName = typedName..text
+        if errorMountingLastTime then errorMountingLastTime = false end
     end
 end
 
@@ -451,6 +461,11 @@ function love.draw()
         love.graphics.draw(SplashScreen, 0, 0)
         love.graphics.setFont(Battlefont)
         love.graphics.print(typedName..".zip", 256, 600)
+
+        if errorMountingLastTime then
+            love.graphics.setColor(1, 0, 0)
+            love.graphics.print("Couldn't load your mod :(\nCheck for typos in the .zip name.", 256, 700)
+        end
 
     end
 
