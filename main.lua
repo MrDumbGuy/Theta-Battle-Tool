@@ -75,6 +75,8 @@ local SplashSong = love.audio.newSource("music/flowery.ogg", "stream")
 
 --used to detect the manually typed out game name.
 local typedName = ""
+--used to track how long since the last time typedName was truncated.
+local typedNameTruncCounter = 0
 --[[
     Although you can, I'd advise against placing anything battle-specific here.
     That kind of defeats the point of having made an engine instead of a messily-coded fangame.
@@ -96,17 +98,16 @@ local function startBattle()
     actindex = {}
     actindex = {}
     selected_enemies = {}
-    SplashSong:stop()
 
     local path = "encounters/"..typedName..".zip"
     local encounterdata, err = love.filesystem.newFileData(path)
-    local filemounted
 
     if encounterdata then
         love.filesystem.mount(encounterdata, "mountedbattle", "", true)
     end
 
     if encounterdata then
+        SplashSong:stop()
         Controller:load()
         battling = true
         errorMountingLastTime = false
@@ -158,6 +159,14 @@ function love.update(dt)
     else
         if not SplashSong:isPlaying() then
             SplashSong:play()
+        end
+        if love.keyboard.isDown("backspace") and typedName:len() > 0 then
+            if typedNameTruncCounter > 0.07 then
+                typedName = typedName:sub(1, -2)
+                typedNameTruncCounter = 0
+            else
+                typedNameTruncCounter = typedNameTruncCounter + dt
+            end
         end
     end
 
@@ -464,7 +473,7 @@ function love.draw()
 
         if errorMountingLastTime then
             love.graphics.setColor(1, 0, 0)
-            love.graphics.print("Couldn't load your mod :(\nCheck for typos in the .zip name.", 256, 700)
+            love.graphics.print("Couldn't load your encounter :(\nCheck for typos in the .zip name.", 256, 700)
         end
 
     end
