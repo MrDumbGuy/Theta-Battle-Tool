@@ -9,6 +9,7 @@ function Controller:load()
     self.doneNavigating = false
     self.current_party_member = 1
     self.Soul = require "soul"
+    self.Enemysubarray  = self.battle.Enemysubarray
     self:BULLETSCleanup()
 end
 
@@ -232,7 +233,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
                     self.battle.UIs[self:getPartyMember()]:subtext("* A wild battle commentary appeared!")
                 end
             else
-                self.battle.UIs[self:getPartyMember()]:menuState(self.Soul, 631, 471, ARR_STATES[self.battle.UIs[self:getPartyMember()].buttonmode], Enemysubarray)
+                self.battle.UIs[self:getPartyMember()]:menuState(self.Soul, 631, 471, ARR_STATES[self.battle.UIs[self:getPartyMember()].buttonmode], self.Enemysubarray)
             end
 
             if self:getState() ~= "BATTLEUI" then
@@ -306,7 +307,7 @@ function Controller:heartBeat(key, selected_enemies, enemies_to_attack, actname,
         if key == "x" then
             love.audio.play(SND_SELECT)
             selected_enemy = nil
-            self.battle.UIs[self:getPartyMember()]:menuState(self.Soul, 0, 0, "ACTUI", Enemysubarray)
+            self.battle.UIs[self:getPartyMember()]:menuState(self.Soul, 0, 0, "ACTUI", self.Enemysubarray)
             self.battle.party_members[self:getPartyMember()]:set_animation("idle")
 
         elseif key == "z" then
